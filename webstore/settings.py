@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'payment.apps.PaymentConfig',
     'shop.apps.ShopConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
@@ -136,4 +137,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 STRIPE_PUBLISHABLE_KEY = ''
 STRIPE_SECRET_KEY = ''
-STRIPE_API_VERSION = '2024-04-08'
+STRIPE_API_VERSION = '2023-10-16'
