@@ -5,7 +5,6 @@ from .models import Coupon
 from .forms import CouponApplyForm
 
 
-# Create your views here.
 @require_POST
 def coupon_apply(request):
     now = timezone.now()
