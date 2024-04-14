@@ -145,3 +145,7 @@ EMAIL_HOST_USER = 'pikdzudaist2@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 1
