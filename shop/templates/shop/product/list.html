@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="sidebar">
+    <div id="sidebar-custom">
         <h3>Категории</h3>
         <ul>
             <li {% if not category %}class="selected"{% endif %}>
@@ -19,18 +19,18 @@
             {% endfor %}
         </ul>
     </div>
-    <div id="main" class="product-list">
+    <div id="main" class="product-list" style="padding-right: 200px; overflow: scroll; padding-left: 70px;">
         <h1>{% if category %}{{ category.name }}{% else %}Товары{% endif %}</h1>
         {% for product in products %}
-            <div class="item">
+            <div class="item" style="height: 500px;">
                 <a href="{{ product.get_absolute_url }}">
-                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+                    <img class="img-size" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
                 </a>
-                <a href="{{ product.get_absolute_url }}">
+                <a class="wrapper-break" style="" href="{{ product.get_absolute_url }}">
                     {{ product.name }}
                 </a>
                 <br>
-                {{ product.price }} ₽
+                <p style="text-align: right">{{ product.price }} ₽</p>
             </div>
         {% endfor %}
     </div>

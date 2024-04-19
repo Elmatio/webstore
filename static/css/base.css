@@ -10,29 +10,6 @@ h1, h2, h3, h4, h5 , h6 {
     font-family: 'Ubuntu', sans-serif; font-weight:normal;
 }
 
-a {
-    text-decoration:none;
-    color:#5993bb;
-}
-
-a:hover {
-    color:#77b6e2;
-}
-
-a.button, input[type="submit"] {
-    color:#fff;
-    background:#5993bb;
-    border-radius:4px;
-    padding:10px 20px;
-    font-size:14px;
-    border:0;
-}
-
-a.button.light {
-    color:#666;
-    background:#ededed;
-}
-
 .text-left {
     text-align:left;
 }
@@ -169,7 +146,7 @@ ul.errorlist {
 }
 
 #sidebar ul li.selected {
-    background:#5993bb;
+    background:#F77B07;
     border-radius:4px;
 }
 
@@ -182,14 +159,21 @@ ul.errorlist {
     width: 96%;
     margin-right:-220px;
     overflow:hidden;
+    display: inline;
+    height: 10px;
 }
 
 .product-list .item {
     width:25%;
+    max-width: 25%;
+    max-height:250px;
     padding:10px 20px 10px 0;
     float:left;
     text-align:center;
     line-height:1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
 }
 
 .product-list .item img {
@@ -325,6 +309,5 @@ form div.field {
     padding:6px 12px;
     border:0;
     background:#efefef;
-    color:#666;
     border-radius:4px;
 }
