@@ -19,18 +19,20 @@
             {% endfor %}
         </ul>
     </div>
-    <div id="main" class="product-list" style="padding-right: 200px; overflow: scroll; padding-left: 70px;">
-        <h1>{% if category %}{{ category.name }}{% else %}Товары{% endif %}</h1>
+    <div id="main" class="product-list" style="">
+        <h1 style="margin-bottom: 10%; width: 100%;">{% if category %}{{ category.name }}{% else %}Товары{% endif %}</h1>
         {% for product in products %}
-            <div class="item" style="height: 500px;">
-                <a href="{{ product.get_absolute_url }}">
-                    <img class="img-size" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
-                </a>
-                <a class="wrapper-break" style="" href="{{ product.get_absolute_url }}">
+            <div class="item" style="padding-bottom: 0; position: relative;">
+                    <a href="{{ product.get_absolute_url }}">
+                        <img style="" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+                    </a>
+                <div style="margin-bottom: 1%; bottom: 30%; right: 25%; position: absolute;">
+                <a class="wrapper-break" style="padding-right: 0; text-align: right;" href="{{ product.get_absolute_url }}">
                     {{ product.name }}
                 </a>
                 <br>
-                <p style="text-align: right">{{ product.price }} ₽</p>
+                <p style="text-align: right;">{{ product.price }} ₽</p>
+                </div>
             </div>
         {% endfor %}
     </div>
