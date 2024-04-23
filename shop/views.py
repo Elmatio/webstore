@@ -2,13 +2,19 @@ from django.shortcuts import render, get_object_or_404
 from .models import Category, Product
 from cart.forms import AddProductForm
 from .recommender import Recommender
+from django.views.generic import ListView
+from django.db.models import Q
 
 
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
     products = Product.objects.filter(available=True)
-    if category_slug:
+    slugs = [categories[i].slug for i in range(len(categories))]
+    search_query = request.GET.get('search_field', None)
+    if search_query:
+        products = Product.objects.filter(Q(name__icontains=search_query) | Q(description__iregex=search_query))
+    if category_slug in slugs:
         category = get_object_or_404(Category,
                                      slug=category_slug)
         products = products.filter(category=category)

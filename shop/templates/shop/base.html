@@ -9,7 +9,7 @@
     </head>
     <body>
         <div class="header">
-            <div class="logo"><a href="/"><img class="logo_img" src='media/icons/result.png'></a></div>
+            <div class="logo"><a href="/"><img class="logo_img" src='{% static "img/result.png" %}'></a></div>
             <div class="container">
                 <div>
                     <a href="#">
@@ -24,21 +24,21 @@
                 </div>
             </div>
             <div class="form_search">
-                <form>
-                  <input type="text" placeholder="Искать здесь...">
+                <form action="{% url 'shop:product_list' %}" method="get">
+                  <input type="text" placeholder="Искать здесь..." name="search_field">
                   <button type="submit">🔍︎</button>
                 </form>
             </div>
             <div>
                 <ul class="ul-nav">
-                    <li class="li-nav"><a href="#"><img class="account_icon_orange" src='media/icons/account_icon_orange.png'></a></li>
-                    <li class="li-nav"><a href="#"><img class="account_icon_light" src='media/icons/account_icon_light.png'></a></li>
+                    <li class="li-nav"><a href="#"><img class="account_icon_orange" src='{% static "img/account_icon_orange.png" %}'></a></li>
+                    <li class="li-nav"><a href="#"><img class="account_icon_light" src='{% static "img/account_icon_light.png" %}'></a></li>
                 </ul>
             </div>
             <div>
                 <ul class="ul-nav">
-                    <li class="li-nav"><a href="#"><img class="account_icon_orange" style="margin-top: 14px;" src='media/icons/basket_orange.png'></a></li>
-                    <li class="li-nav"><a href="{% url 'cart:cart_detail' %}"><img class="account_icon_light" style="margin-top: 14px;" src='media/icons/basket_light.png'></a></li>
+                    <li class="li-nav"><a href="#"><img class="account_icon_orange" style="margin-top: 14px;" src='{% static "img/basket_orange.png" %}'></a></li>
+                    <li class="li-nav"><a href="{% url 'cart:cart_detail' %}"><img class="account_icon_light" style="margin-top: 14px;" src='{% static "img/basket_light.png" %}'></a></li>
                 </ul>
             </div>
         </div>
