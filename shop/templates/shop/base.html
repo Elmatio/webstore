@@ -48,21 +48,6 @@
             <div class="nav-div"><a class="link-nav" href="#">КОНТАКТЫ</a></div>
             <div class="nav-div"><a class="link-nav" href="#">РАССРОЧКА</a></div>
         </div>
-        <!-- <div id="subheader">
-            <div class="cart">
-                {% with total_items=cart|length %}
-                    {% if total_items > 0 %}
-                        В вашей корзине
-                        <a href="{% url 'cart:cart_detail' %}">
-                            {{ total_items }} товар{{ end }},
-                            {{ cart.get_total_price }} ₽
-                        </a>
-                    {% elif not order %}
-                        Ваша корзина пуста.
-                    {% endif %}
-                {% endwith %}
-            </div>
-        </div> -->
         <div id="content">
             {% block content %}
             {% endblock %}

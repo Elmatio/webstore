@@ -6,92 +6,107 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Ваша корзина</h1>
-    <table class="cart">
-        <thead>
-            <tr>
-                <th style="">Изображение</th>
-                <th>Товар</th>
-                <th>Количество</th>
-                <th>Удалить</th>
-                <th>Цена за единицу товара</th>
-                <th>Цена</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart %}
-                {% with product=item.product %}
+    <body style="background: #f6f6f9; position: relative;">
+        <h1 style="padding-left: 11%">Ваша корзина</h1>
+        <div class="sidebar" style="border-radius: 42px;">
+            <div style="width: 20%; height: 21%; background: #fff; display: block; position: absolute; padding-left: 1%; padding-top: 1%; padding-right: 1%; border-radius: 20px;">
+                <a href='#' class="address">Выбрать адрес доставки</a>
+                <p style="margin-top: 10%;">Товары, {{ cart.get_total_count }} шт.</p>
+                <div style="display:flex; justify-content: space-between;">
+                    <h2 style="flex: 1 0;">Итого: </h2>
+                    <h2 style="flex: 0 1; white-space: nowrap;">{{ cart.get_total_price_after_discount }} ₽</h2>
+                </div>
+                <a href="{% url 'orders:order_create' %}" class="placing-order">
+                    <div style="height: 20%; width: 98%; background-color: #F77B07; border-radius: 10px;">
+                        <p style="padding-top: 4%; margin-top: 0;">Оформить заказ</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+            <div style="margin-left: 10%; padding: 1%; background-color: #fff; max-width: 60%; padding: 2%; border-radius: 20px;">
+        <table class="cart" style="width: 100%; border-radius: 20px;">
+            <thead>
+                <!-- <tr>
+                    <th style="">Изображение</th>
+                    <th>Товар</th>
+                    <th>Количество</th>
+                    <th>Удалить</th>
+                    <th>Цена за единицу товара</th>
+                    <th>Цена</th>
+                </tr> -->
+            </thead>
+            <tbody style="border-radius: 20px;">
+                {% for item in cart %}
+                    {% with product=item.product %}
+                        <tr>
+                            <td>
+                                <a href="{{ product.get_absolute_url }}">
+                                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+                                </a>
+                            </td>
+                            <td>{{ product.name }}</td>
+                            <td>
+                                <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                    {{ item.update_quantity_form.quantity }}
+                                    {{ item.update_quantity_form.override }}
+                                    <input type="submit" value="Обновить">
+                                    {% csrf_token %}
+                                </form>
+                            </td>
+                            <td>
+                                <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                                    <input type="submit" value="Удалить">
+                                    {% csrf_token %}
+                                </form>
+                            </td>
+                            <td class="num">{{ item.price }} ₽</td>
+                            <td class="num">{{ item.total_price }} ₽</td>
+                        </tr>
+                    {% endwith %}
+                {% endfor %}
+                {% if cart.coupon %}
+                    <tr class="subtotal">
+                        <td>Промежуточный итог</td>
+                        <td colspan="4"></td>
+                        <td class="num">{{ cart.get_total_price }} ₽</td>
+                    </tr>
                     <tr>
                         <td>
-                            <a href="{{ product.get_absolute_url }}">
-                                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
-                            </a>
+                            "{{ cart.coupon.code }}" купон
+                            ({{ cart.coupon.discount }}% скидка)
                         </td>
-                        <td>{{ product.name }}</td>
-                        <td>
-                            <form action="{% url 'cart:cart_add' product.id %}" method="post">
-                                {{ item.update_quantity_form.quantity }}
-                                {{ item.update_quantity_form.override }}
-                                <input type="submit" value="Обновить">
-                                {% csrf_token %}
-                            </form>
+                        <td colspan="4"></td>
+                        <td class="num neg">
+                            -{{ cart.get_discount}} ₽
                         </td>
-                        <td>
-                            <form action="{% url 'cart:cart_remove' product.id %}" method="post">
-                                <input type="submit" value="Удалить">
-                                {% csrf_token %}
-                            </form>
-                        </td>
-                        <td class="num">{{ item.price }} ₽</td>
-                        <td class="num">{{ item.total_price }} ₽</td>
                     </tr>
-                {% endwith %}
-            {% endfor %}
-            {% if cart.coupon %}
-                <tr class="subtotal">
-                    <td>Промежуточный итог</td>
-                    <td colspan="4"></td>
-                    <td class="num">{{ cart.get_total_price }} ₽</td>
-                </tr>
-                <tr>
-                    <td>
-                        "{{ cart.coupon.code }}" купон
-                        ({{ cart.coupon.discount }}% скидка)
-                    </td>
-                    <td colspan="4"></td>
-                    <td class="num neg">
-                        -{{ cart.get_discount}} ₽
-                    </td>
-                </tr>
-            {% endif %}
-            <tr class="total">
-                <td>Общая стоимость</td>
-                <td colspan="4"></td>
-                <td class="num">{{ cart.get_total_price_after_discount }} ₽</td>
-            </tr>
-        </tbody>
-    </table>
-    {% if recommended_products %}
-        <div class="recommendations cart">
-            <h3>С этими товарами также покупают</h3>
-            {% for p in recommended_products %}
-                <div class="item">
-                    <a href="{{ p.get_absolute_url }}">
-                        <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
-                    </a>
-                    <p><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></p>
+                {% endif %}
+<!--                <tr class="total">-->
+<!--                    <td>Общая стоимость</td>-->
+<!--                    <td colspan="4"></td>-->
+<!--                    <td class="num">{{ cart.get_total_price_after_discount }} ₽</td>-->
+<!--                </tr>-->
+            </tbody>
+        </table>
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-    <p>Воспользуйтесь купоном:</p>
-    <form action="{% url 'coupons:apply' %}" method="post">
-        {{ coupon_apply_form }}
-        <input type="submit" value="Подтвердить">
-        {% csrf_token %}
-    </form>
-    <p class="text-right">
-        <a href="{% url 'shop:product_list' %}" class="button light">Вернуться к просмотру товаров</a>
-        <a href="{% url 'orders:order_create' %}" class="button">Оформить заказ</a>
-    </p>
+        {% if recommended_products %}
+            <div class="recommendations cart">
+                <h3>С этими товарами также покупают</h3>
+                {% for p in recommended_products %}
+                    <div class="item">
+                        <a href="{{ p.get_absolute_url }}">
+                            <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+                        </a>
+                        <p><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+<!--        <p>Воспользуйтесь купоном:</p>-->
+<!--        <form action="{% url 'coupons:apply' %}" method="post">-->
+<!--            {{ coupon_apply_form }}-->
+<!--            <input type="submit" value="Подтвердить">-->
+<!--            {% csrf_token %}-->
+<!--        </form>-->
+    </body>
 {% endblock %}
