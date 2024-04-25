@@ -76,3 +76,8 @@ class Cart:
     def clear(self):
         del self.session[settings.CART_SESSION_ID]
         self.save()
+
+    def update_product_count(self, product_count):
+        for item in self.cart.values():
+            item['quantity'] = int(product_count)
+        self.save()
