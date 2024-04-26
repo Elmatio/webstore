@@ -49,15 +49,15 @@
                                     <button type="button" data-action="minus">-</button>
                                     <p data-counter>{{ item.quantity }}</p>
                                     <button type="button" data-action="plus">+</button>
-                                    <form class="form_plus" action="{% url 'cart:cart_add' product.id %}" method="post">
-<!--                                        {{ item.update_quantity_form.quantity }}-->
-<!--                                        {{ item.update_quantity_form.override }}-->
-<!--                                        <input type="submit" value="Обновить">-->
-                                            {{ item.update_quantity_form.quantity }}
-                                            {{ item.update_quantity_form.override }}
-                                            <input type="submit" data-action="plus" value="+">
-                                        {% csrf_token %}
-                                    </form>
+<!--                                    <form class="form_plus" action="{% url 'cart:cart_add' product.id %}" method="post">-->
+<!--&lt;!&ndash;                                        {{ item.update_quantity_form.quantity }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                        {{ item.update_quantity_form.override }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <input type="submit" value="Обновить">&ndash;&gt;-->
+<!--                                            {{ item.update_quantity_form.quantity }}-->
+<!--                                            {{ item.update_quantity_form.override }}-->
+<!--                                            <input type="button" data-action="plus" value="+">-->
+<!--                                        {% csrf_token %}-->
+<!--                                    </form>-->
                                 </td>
                                 <td>
                                     <form action="{% url 'cart:cart_remove' product.id %}" method="post">
@@ -116,44 +116,101 @@
 <!--            {% csrf_token %}-->
 <!--        </form>-->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--        <script>-->
+<!--            window.addEventListener('click', function (event) {-->
+<!--                const counterWrapper = event.target.closest('.count-products');-->
+<!--                const counter = counterWrapper.querySelector('[data-counter]');-->
+<!--                let counterValue = parseInt(counter.innerText);-->
+
+<!--                if (event.target.dataset.action === 'plus') {-->
+<!--                    counterValue++;-->
+<!--                }-->
+
+<!--                if (event.target.dataset.action === 'minus' && parseInt (counter.innerText) > 1) {-->
+<!--                    counterValue&#45;&#45;;-->
+<!--                }-->
+<!--                counter.innerText = counterValue.toString();-->
+
+<!--                console.log('Counter value after:', counterValue);-->
+
+<!--                counter.innerText = counterValue.toString();-->
+
+<!--                var data_to_send = {-->
+<!--                  product_count: counter.innerText-->
+<!--                };-->
+
+<!--                var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();-->
+<!--                $.ajax({-->
+<!--                    url: "{% url 'cart:save_data' %}",-->
+<!--                    method: 'POST',-->
+<!--                    headers: {"X-CSRFToken": csrftoken},-->
+<!--                    data: data_to_send,-->
+<!--                    success: function(response) {-->
+<!--                        console.log('Ответ сервера:', response);-->
+<!--                    },-->
+<!--                    error: function(xhr, errmsg, err) {-->
+<!--                        console.log('Статус ошибки: ', xhr.status);-->
+<!--                        console.log('Текст ошибки: ', errmsg);-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+<!--        </script>-->
         <script>
-            window.addEventListener('click', function (event) {
-                const counterWrapper = event.target.closest('.count-products');
-                const counter = counterWrapper.querySelector('[data-counter]');
-                let counterValue = parseInt(counter.innerText);
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Проверяем, начинается ли куки с нужного имени
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
 
-                if (event.target.dataset.action === 'plus') {
-                    counterValue++;
+        $(document).ready(function() {
+            // Обработчик клика на кнопки плюса и минуса
+            $('.count-products button').on('click', function() {
+                // Получаем текущее значение количества товара
+                var quantityElement = $(this).siblings('[data-counter]');
+                var currentQuantity = parseInt(quantityElement.text());
+
+                // Определяем действие (увеличение или уменьшение)
+                var action = $(this).data('action');
+                if (action === 'plus') {
+                    currentQuantity++;
+                } else if (action === 'minus' && currentQuantity > 1) {
+                    currentQuantity--;
                 }
 
-                if (event.target.dataset.action === 'minus' && parseInt (counter.innerText) > 1) {
-                    counterValue--;
-                }
-                counter.innerText = counterValue.toString();
+                // Обновляем отображение количества товара
+                quantityElement.text(currentQuantity);
 
-                console.log('Counter value after:', counterValue);
-
-                counter.innerText = counterValue.toString();
-
-                var data_to_send = {
-                  product_count: counter.innerText
+                // Отправляем AJAX-запрос для обновления количества товара на сервере
+                var productCountData = {
+                    product_count: currentQuantity
                 };
 
-                var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+                console.log('Отправленные данные:', productCountData);  // Добавьте эту строку
+
                 $.ajax({
                     url: "{% url 'cart:save_data' %}",
                     method: 'POST',
-                    headers: {"X-CSRFToken": csrftoken},
-                    data: data_to_send,
+                    headers: {"X-CSRFToken": getCookie('csrftoken')},
+                    data: productCountData,
                     success: function(response) {
-                        console.log('Ответ сервера:', response);
+                        console.log('Данные успешно отправлены на сервер');
                     },
                     error: function(xhr, errmsg, err) {
-                        console.log('Статус ошибки: ', xhr.status);
-                        console.log('Текст ошибки: ', errmsg);
+                        console.log('Ошибка: ', errmsg);
                     }
                 });
             });
+        });
         </script>
     </body>
 {% endblock %}

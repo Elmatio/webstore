@@ -6,10 +6,9 @@ from .forms import AddProductForm
 from coupons.forms import CouponApplyForm
 from shop.recommender import Recommender
 from django.http import JsonResponse
+from django.core.serializers import serialize
 
 
-
-# Create your views here.
 @require_POST
 def cart_add(request, product_id):
     cart = Cart(request)
@@ -31,6 +30,19 @@ def cart_remove(request, product_id):
     return redirect('cart:cart_detail')
 
 
+def cart_detail(request):
+    cart = Cart(request)
+    coupon_apply_form = CouponApplyForm()
+    r = Recommender()
+    cart_products = [item['product'] for item in cart]
+    if cart_products:
+        recommended_products = r.suggest_products_for(cart_products, max_results=4)
+    else:
+        recommended_products = []
+    return render(request, 'cart/detail.html', {'cart': cart, 'coupon_apply_form': coupon_apply_form, 'recommended_products': recommended_products})
+
+
+
 # def cart_detail(request):
 #     cart = Cart(request)
 #     for item in cart:
@@ -45,6 +57,13 @@ def cart_remove(request, product_id):
 #                                                       max_results=4)
 #     else:
 #         recommended_products = []
+#
+#     # Load saved data from session if available
+#     saved_product_count = request.session.get('product_count')
+#     if saved_product_count is not None:
+#         # Update cart with saved product count
+#         cart.update_product_count(saved_product_count)
+#
 #     return render(request,
 #                   'cart/detail.html',
 #                   {'cart': cart,
@@ -52,43 +71,11 @@ def cart_remove(request, product_id):
 #                    'recommended_products': recommended_products})
 
 
-def cart_detail(request):
-    cart = Cart(request)
-    for item in cart:
-        item['update_quantity_form'] = AddProductForm(initial={
-            'quantity': item['quantity'],
-            'override': True})
-    coupon_apply_form = CouponApplyForm()
-    r = Recommender()
-    cart_products = [item['product'] for item in cart]
-    if cart_products:
-        recommended_products = r.suggest_products_for(cart_products,
-                                                      max_results=4)
-    else:
-        recommended_products = []
-
-    # Load saved data from session if available
-    saved_product_count = request.session.get('product_count')
-    if saved_product_count is not None:
-        # Update cart with saved product count
-        cart.update_product_count(saved_product_count)
-
-    return render(request,
-                  'cart/detail.html',
-                  {'cart': cart,
-                   'coupon_apply_form': coupon_apply_form,
-                   'recommended_products': recommended_products})
-
-
 def save_data_to_session(request):
     if request.method == 'POST':
-        # Получаем данные из запроса
-        received_data = request.POST.get('product_count')  # Получаем значение по ключу 'key'
-
-        # Сохраняем данные в сессии
-        request.session['product_count'] = received_data  # Замените 'your_key' на свой ключ
-
-        # Возвращаем JSON ответ клиенту
-        return JsonResponse({'message': 'Data saved successfully'})
-    else:
-        return JsonResponse({'error': 'Only POST requests are allowed'}, status=400)
+        product_count = request.POST.get('product_count')
+        request.session['product_count'] = product_count
+        request.session.modified = True  # Убедитесь, что изменения сохранены в сессии
+        print('Принято количество товаров:', product_count)
+        return JsonResponse({'message': 'Data received successfully'})
+    return JsonResponse({'message': 'Only POST method is allowed'})
