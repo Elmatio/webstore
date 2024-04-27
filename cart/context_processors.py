@@ -1,12 +1,12 @@
-from .cart import Cart
+from .cart import CartClass
 
 
 def cart(request):
-    cart = Cart(request)
+    cart = CartClass(request)
     end = ''
     if len(cart) > 1:
         if len(cart) < 5:
             end = 'а'
         else:
             end = 'ов'
-    return {'cart': Cart(request), 'end': end}
+    return {'cart': CartClass(request), 'end': end}

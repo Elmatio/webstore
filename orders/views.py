@@ -8,11 +8,11 @@ import weasyprint
 from .models import OrderItem, Order
 from .forms import OrderCreateForms
 from .tasks import order_created
-from cart.cart import Cart
+from cart.cart import CartClass
 
 
 def order_create(request):
-    cart = Cart(request)
+    cart = CartClass(request)
     if request.method == 'POST':
         form = OrderCreateForms(request.POST)
         if form.is_valid():

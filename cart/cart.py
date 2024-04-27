@@ -4,7 +4,7 @@ from coupons.models import Coupon
 from decimal import Decimal
 
 
-class Cart:
+class CartClass:
     @property
     def coupon(self):
         if self.coupon_id:

@@ -36,7 +36,7 @@
                     </tr> -->
                 </thead>
                 <tbody style="border-radius: 20px;">
-                    {% for item in cart %}
+                    {% for item in cart_item %}
                         {% with product=item.product %}
                             <tr>
                                 <td>
@@ -155,62 +155,62 @@
 <!--                });-->
 <!--            });-->
 <!--        </script>-->
-        <script>
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i].trim();
-                    // Проверяем, начинается ли куки с нужного имени
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
+<!--        <script>-->
+<!--        function getCookie(name) {-->
+<!--            var cookieValue = null;-->
+<!--            if (document.cookie && document.cookie !== '') {-->
+<!--                var cookies = document.cookie.split(';');-->
+<!--                for (var i = 0; i < cookies.length; i++) {-->
+<!--                    var cookie = cookies[i].trim();-->
+<!--                    // Проверяем, начинается ли куки с нужного имени-->
+<!--                    if (cookie.substring(0, name.length + 1) === (name + '=')) {-->
+<!--                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));-->
+<!--                        break;-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+<!--            return cookieValue;-->
+<!--        }-->
 
-        $(document).ready(function() {
-            // Обработчик клика на кнопки плюса и минуса
-            $('.count-products button').on('click', function() {
-                // Получаем текущее значение количества товара
-                var quantityElement = $(this).siblings('[data-counter]');
-                var currentQuantity = parseInt(quantityElement.text());
+<!--        $(document).ready(function() {-->
+<!--            // Обработчик клика на кнопки плюса и минуса-->
+<!--            $('.count-products button').on('click', function() {-->
+<!--                // Получаем текущее значение количества товара-->
+<!--                var quantityElement = $(this).siblings('[data-counter]');-->
+<!--                var currentQuantity = parseInt(quantityElement.text());-->
 
-                // Определяем действие (увеличение или уменьшение)
-                var action = $(this).data('action');
-                if (action === 'plus') {
-                    currentQuantity++;
-                } else if (action === 'minus' && currentQuantity > 1) {
-                    currentQuantity--;
-                }
+<!--                // Определяем действие (увеличение или уменьшение)-->
+<!--                var action = $(this).data('action');-->
+<!--                if (action === 'plus') {-->
+<!--                    currentQuantity++;-->
+<!--                } else if (action === 'minus' && currentQuantity > 1) {-->
+<!--                    currentQuantity&#45;&#45;;-->
+<!--                }-->
 
-                // Обновляем отображение количества товара
-                quantityElement.text(currentQuantity);
+<!--                // Обновляем отображение количества товара-->
+<!--                quantityElement.text(currentQuantity);-->
 
-                // Отправляем AJAX-запрос для обновления количества товара на сервере
-                var productCountData = {
-                    product_count: currentQuantity
-                };
+<!--                // Отправляем AJAX-запрос для обновления количества товара на сервере-->
+<!--                var productCountData = {-->
+<!--                    product_count: currentQuantity-->
+<!--                };-->
 
-                console.log('Отправленные данные:', productCountData);  // Добавьте эту строку
+<!--                console.log('Отправленные данные:', productCountData);  // Добавьте эту строку-->
 
-                $.ajax({
-                    url: "{% url 'cart:save_data' %}",
-                    method: 'POST',
-                    headers: {"X-CSRFToken": getCookie('csrftoken')},
-                    data: productCountData,
-                    success: function(response) {
-                        console.log('Данные успешно отправлены на сервер');
-                    },
-                    error: function(xhr, errmsg, err) {
-                        console.log('Ошибка: ', errmsg);
-                    }
-                });
-            });
-        });
-        </script>
+<!--                $.ajax({-->
+<!--                    url: "{% url 'cart:save_data' %}",-->
+<!--                    method: 'POST',-->
+<!--                    headers: {"X-CSRFToken": getCookie('csrftoken')},-->
+<!--                    data: productCountData,-->
+<!--                    success: function(response) {-->
+<!--                        console.log('Данные успешно отправлены на сервер');-->
+<!--                    },-->
+<!--                    error: function(xhr, errmsg, err) {-->
+<!--                        console.log('Ошибка: ', errmsg);-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--        </script>-->
     </body>
 {% endblock %}
