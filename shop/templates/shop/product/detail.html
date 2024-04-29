@@ -13,12 +13,17 @@
             </a>
         </h2>
         <p class="price">{{ product.price }} ₽</p>
-        <form action="{% url 'cart:cart_add' product.id %}" method="post">
-            {{ cart_product }}
+<!--        <form action="{% url 'cart:cart_add' product.id %}" method="post">-->
+<!--            {{ cart_product }}-->
+<!--            {% csrf_token %}-->
+<!--            <button type="button" data-action="minus">-</button>-->
+<!--            <p data-counter>1</p>-->
+<!--            <button type="button" data-action="plus">+</button>-->
+<!--            <input type="submit" value="Добавить в корзину">-->
+<!--        </form>-->
+        <form action="{% url 'cart:cart_add' product.id %}" method="POST">
             {% csrf_token %}
-            <button type="button" data-action="minus">-</button>
-            <p data-counter>1</p>
-            <button type="button" data-action="plus">+</button>
+            <input type="number" name="quantity" value="1" min="1">
             <input type="submit" value="Добавить в корзину">
         </form>
         {{ product.description|linebreaks }}

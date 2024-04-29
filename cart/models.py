@@ -1,5 +1,8 @@
 from django.db import models
 from shop.models import Product
+from django.conf import settings
+from coupons.models import Coupon
+from decimal import Decimal
 
 
 class Cart(models.Model):
@@ -7,6 +10,7 @@ class Cart(models.Model):
     products = models.ManyToManyField(Product,
                                       through='CartItem')
     session = models.CharField(max_length=255, null=True, blank=True)
+    session_key = models.CharField(max_length=100, unique=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -27,6 +31,22 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    session = models.CharField(max_length=255, null=True, blank=True)
+
+    def total_price(self):
+        return self.product.price * self.quantity
+
+    def get_total_price(self):
+        items = CartItem.objects.all()
+        return sum(item.total_price() for item in items)
+
+    def get_total_count(self):
+        items = CartItem.objects.all()
+        return sum([item.quantity for item in items])
+
+    def clear(self):
+        del self.session[settings.CART_SESSION_ID]
+        self.save()
 
     class Meta:
         ordering = ['-created']
