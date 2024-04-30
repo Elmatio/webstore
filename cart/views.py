@@ -1,5 +1,6 @@
 from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from shop.models import Product
 from .cart import CartClass
@@ -57,9 +58,21 @@ def cart_add(request, product_id):
     session_key = request.session.session_key
     cart, created = Cart.objects.get_or_create(session_key=session_key)
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    cart_item.quantity = int(request.POST.get('quantity', 1))
+    quantity = int(request.POST.get('quantity', 1))
+    if not created:
+        cart_item.quantity += quantity
     cart_item.save()
-    return redirect('cart:cart_detail')
+    cart_item_html = render_to_string('cart/detail.html',
+                                      {'cart_item': cart_item},
+                                      request=request)
+    response_data = {
+        'message': 'Товар добавлен в корзину',
+        'cart_item_html': cart_item_html,
+    }
+    return JsonResponse(response_data)
+    #return redirect('cart:cart_detail')
+
+
 
 
 # @require_POST
@@ -126,11 +139,20 @@ def cart_detail(request):
 #                    'recommended_products': recommended_products})
 
 
+@require_POST
 def save_data_to_session(request):
-    if request.method == 'POST':
-        product_count = request.POST.get('product_count')
-        request.session['product_count'] = product_count
-        request.session.modified = True  # Убедитесь, что изменения сохранены в сессии
-        print('Принято количество товаров:', product_count)
-        return JsonResponse({'message': 'Data received successfully'})
-    return JsonResponse({'message': 'Only POST method is allowed'})
+    product_id = request.POST.get('product_id')
+    product_count = request.POST.get('product_count')
+
+    # Получить объекты товара и корзины
+    product = get_object_or_404(Product, id=product_id)
+    session_key = request.session.session_key
+    cart, _ = Cart.objects.get_or_create(session_key=session_key)
+    cart_item, _ = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    # Обновить количество товара в корзине
+    cart_item.quantity = product_count
+    cart_item.save()
+
+    # Вернуть ответ JSON
+    return JsonResponse({'message': 'Data received successfully'})
