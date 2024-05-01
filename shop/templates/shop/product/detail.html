@@ -21,10 +21,12 @@
 <!--            <button type="button" data-action="plus">+</button>-->
 <!--            <input type="submit" value="Добавить в корзину">-->
 <!--        </form>-->
-        <form action="{% url 'cart:cart_add' product.id %}" method="POST">
+        <form class="count-products" action="{% url 'cart:cart_add' product.id %}" method="POST">
             {% csrf_token %}
-            <input type="number" name="quantity" value="1" min="1">
-            <input type="submit" value="Добавить в корзину">
+            <button type="button" data-action="minus" class="change-count">-</button>
+            <input data-counter name="quantity" value="1" min="1">
+            <button type="button" data-action="plus" class="change-count">+</button>
+            <input type="submit" class="add_to_cart" value="Добавить в корзину">
         </form>
         {{ product.description|linebreaks }}
         {% if recommended_products %}
@@ -43,30 +45,12 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i].trim();
-                    // Проверяем, начинается ли куки с нужного имени
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
         $(document).ready(function() {
-            // Обработчик клика на кнопки плюса и минуса
-            $('.count-products button').on('click', function() {
-                // Получаем текущее значение количества товара
-                var quantityElement = $(this).siblings('[data-counter]');
-                var currentQuantity = parseInt(quantityElement.text());
+            $(document).on('click', '.count-products button', function() {
+                var row = $(this).closest('.product-detail');
 
-                // Определяем действие (увеличение или уменьшение)
+                var quantityElement = row.find('[data-counter]');
+                var currentQuantity = parseInt(quantityElement.val());
                 var action = $(this).data('action');
                 if (action === 'plus') {
                     currentQuantity++;
@@ -74,28 +58,12 @@
                     currentQuantity--;
                 }
 
-                // Обновляем отображение количества товара
-                quantityElement.text(currentQuantity);
-
-                // Отправляем AJAX-запрос для обновления количества товара на сервере
-                var productCountData = {
-                    product_count: currentQuantity
-                };
-
-                console.log('Отправленные данные:', productCountData);  // Добавьте эту строку
-
-                $.ajax({
-                    url: "{% url 'cart:save_data' %}",
-                    method: 'POST',
-                    headers: {"X-CSRFToken": getCookie('csrftoken')},
-                    data: productCountData,
-                    success: function(response) {
-                        console.log('Данные успешно отправлены на сервер');
-                    },
-                    error: function(xhr, errmsg, err) {
-                        console.log('Ошибка: ', errmsg);
-                    }
-                });
+                quantityElement.val(currentQuantity);
+            });
+        });
+        $(document).ready(function() {
+            $(document).on('click', '.add_to_cart', function() {
+                alert('Товар успешно добавлен в корзину');
             });
         });
     </script>

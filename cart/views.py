@@ -25,34 +25,6 @@ from django.contrib.sessions.models import Session
 #                  override_quantity=cd['override'])
 #     return redirect('cart:cart_detail')
 
-
-# @require_POST
-# def cart_add(request, product_id):
-#     cart = CartClass(request)
-#     # Получаем данные из POST запроса
-#     quantity = int(request.POST.get('quantity', 1))
-#     print(f'количество товара{quantity}')
-#
-#     session_id = request.session.session_key
-#     try:
-#         cart_m = Cart.objects.get(session=session_id)
-#     except Cart.DoesNotExist:
-#         cart_m = Cart.objects.create(session=session_id)
-#
-#     product = Product.objects.get(id=product_id)
-#
-#     cart_item, created = CartItem.objects.get_or_create(cart=cart_m, product=product)
-#
-#     if not created:
-#         cart_item.quantity += quantity
-#     else:
-#         cart_item.quantity = quantity
-#
-#     cart_item.save()
-#
-#     return redirect('cart:cart_detail')
-
-
 def cart_add(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     session_key = request.session.session_key
@@ -62,18 +34,7 @@ def cart_add(request, product_id):
     if not created:
         cart_item.quantity += quantity
     cart_item.save()
-    cart_item_html = render_to_string('cart/detail.html',
-                                      {'cart_item': cart_item},
-                                      request=request)
-    response_data = {
-        'message': 'Товар добавлен в корзину',
-        'cart_item_html': cart_item_html,
-    }
-    return JsonResponse(response_data)
-    #return redirect('cart:cart_detail')
-
-
-
+    return redirect('cart:cart_detail')
 
 # @require_POST
 # def cart_remove(request, product_id):
@@ -91,7 +52,6 @@ def cart_remove(request, product_id):
 
 
 def cart_detail(request):
-    #cart = CartClass(request)
     session_key = request.session.session_key
     cart = Cart.objects.get(session_key=session_key)
     cart_item = cart.cart.all()

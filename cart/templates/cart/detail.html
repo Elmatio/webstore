@@ -11,10 +11,10 @@
         <div class="sidebar" style="border-radius: 42px;">
             <div style="width: 20%; height: 21%; background: #fff; display: block; position: absolute; padding-left: 1%; padding-top: 1%; padding-right: 1%; border-radius: 20px;">
                 <a href='#' class="address">Выбрать адрес доставки</a>
-                <p style="margin-top: 10%;">Товары, {{ cart_item_copy.get_total_count }} шт.</p>
+                <p style="margin-top: 10%;" class="total-count">Товары, {{ cart_item_copy.get_total_count }} шт.</p>
                 <div style="display:flex; justify-content: space-between;">
                     <h2 style="flex: 1 0;">Итого: </h2>
-                    <h2 style="flex: 0 1; white-space: nowrap;">{{ cart_item_copy.get_total_price }} ₽</h2>
+                    <h2 class="total-price" style="flex: 0 1; white-space: nowrap;">{{ cart_item_copy.get_total_price }} ₽</h2>
                 </div>
                 <a href="{% url 'orders:order_create' %}" class="placing-order">
                     <div class="place-order-div">
@@ -68,8 +68,8 @@
                                     </form>
                                 </td>
 
-                                <td class="num">{{ item.product.price }} ₽</td>
-                                <td class="num">{{ item.total_price }} ₽</td>
+                                <td class="num product-price">{{ item.product.price }} ₽</td>
+                                <td class="num price">{{ item.total_price }} ₽</td>
                             </tr>
                         {% endwith %}
                     {% endfor %}
@@ -77,7 +77,9 @@
                         <tr class="subtotal">
                             <td>Промежуточный итог</td>
                             <td colspan="4"></td>
-                            <td class="num">{{ cart_item_copy.get_total_price }} ₽</td>
+                            <td class="num">
+                                <p class="subtotal-price">{{ cart_item_copy.get_total_price }} ₽</p>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -117,53 +119,74 @@
 <!--            <input type="submit" value="Подтвердить">-->
 <!--            {% csrf_token %}-->
 <!--        </form>-->
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Скрипт на асинхронное изменение данных в корзине -->
         <script>
             $(document).ready(function() {
-    // Обработчик клика на кнопки плюса и минуса с использованием делегирования событий
-    $(document).on('click', '.count-products button', function() {
-        // Определяем переменную row здесь, чтобы она была доступна во всей функции
-        var row = $(this).closest('tr');
+            $(document).on('click', '.count-products button', function() {
+                var row = $(this).closest('tr');
+                var rowCoupon = $(this).closest('.subtotal');
 
-        // Получаем текущее значение количества товара
-        var quantityElement = row.find('[data-counter]');
-        var currentQuantity = parseInt(quantityElement.val());
+                var productPrice = parseInt(row.find('.product-price').text().split(' ')[0]);
+                var price = row.find('.price');
+                var currentPrice = parseInt(price.text().split(' ')[0]);
 
-        // Определяем действие (увеличение или уменьшение)
-        var action = $(this).data('action');
-        if (action === 'plus') {
-            currentQuantity++;
-        } else if (action === 'minus' && currentQuantity > 1) {
-            currentQuantity--;
-        }
+                var totalElement = $('.total-count');
+                var currentTotalQuantity = parseInt(totalElement.text().split(' ')[1]);
 
-        // Обновляем отображение количества товара
-        quantityElement.val(currentQuantity);
+                var totalPrice = $('.total-price');
+                var currentTotalPrice = parseInt(totalPrice.text().split(' ')[0]);
 
-        // Получаем product_id из скрытого поля внутри текущей строки
-        var productId = row.find('.product-id').val();
+                var subtotal = $('.subtotal-price');
+                var currentSubtotal = parseInt(subtotal.text().split(' ')[0]);
 
-        // Отправляем AJAX-запрос для обновления количества товара на сервере
-        var productCountData = {
-            'product_id': productId,
-            'product_count': currentQuantity,
-            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-        };
+                var quantityElement = row.find('[data-counter]');
+                var currentQuantity = parseInt(quantityElement.val());
+                var action = $(this).data('action');
+                if (action === 'plus') {
+                    currentQuantity++;
+                    currentTotalQuantity++;
+                    currentTotalPrice += productPrice;
+                    currentPrice += productPrice;
+                    currentSubtotal += productPrice;
+                } else if (action === 'minus' && currentQuantity > 1) {
+                    currentQuantity--;
+                    currentTotalQuantity--;
+                    currentTotalPrice -= productPrice;
+                    currentPrice -= productPrice;
+                    currentSubtotal -= productPrice;
+                }
 
-        $.ajax({
-            url: '/cart/update/',
-            method: 'POST',
-            data: productCountData,
-            dataType: 'json',
-            success: function(response) {
-                console.log(response.message);
-            },
-            error: function(xhr, errmsg, err) {
-                console.log('Ошибка: ', errmsg);
-            }
+                quantityElement.val(currentQuantity);
+                totalElement.text('Товары, ' + currentTotalQuantity + ' шт.');
+                totalPrice.text(currentTotalPrice + ' ₽');
+                price.text(currentPrice + ' ₽');
+                subtotal.text(currentSubtotal + ' ₽');
+
+                var productId = row.find('.product-id').val();
+
+                // Отправляем AJAX-запрос для обновления количества товара на сервере
+                var productCountData = {
+                    'product_id': productId,
+                    'product_count': currentQuantity,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                };
+
+                $.ajax({
+                    url: '/cart/update/',
+                    method: 'POST',
+                    data: productCountData,
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response.message);
+                    },
+                    error: function(xhr, errmsg, err) {
+                        console.log('Ошибка: ', errmsg);
+                    }
+                });
+            });
         });
-    });
-});
         </script>
     </body>
 {% endblock %}
