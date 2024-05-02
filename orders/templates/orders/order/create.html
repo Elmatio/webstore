@@ -7,20 +7,20 @@
     <div class="order-info">
         <h3>Ваш заказ</h3>
         <ul>
-            {% for item in cart %}
+            {% for item in cart_item %}
                 <li>
                     {{ item.quantity }}x {{ item.product_name }}
                     <span>{{ item.total_price }} ₽</span>
                 </li>
             {% endfor %}
-            {% if cart.coupon %}
+            {% if cart_item.coupon %}
                 <li>
-                    "{{ cart.coupon.code }}" ({{ cart.coupon.discount }}% off)
-                    <span class="neg">{{ cart.get_discount }} ₽</span>
+                    "{{ coupon.code }}" ({{ coupon.discount }}% off)
+                    <span class="neg">{{ discount }} ₽</span>
                 </li>
             {% endif %}
         </ul>
-        <p>Общая стоимость: {{ cart.get_total_price_after_discount }}</p>
+        <p>Общая стоимость: {{ total_price }}</p>
     </div>
     <form method="post" class="order-form">
         {{ form.as_p }}

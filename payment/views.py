@@ -46,7 +46,7 @@ def payment_process(request):
         if order.coupon:
             stripe_coupon = stripe.Coupon.create(
                                 name=order.coupon.code,
-                                percent_off=order.discount,
+                                percent_off=order.coupon.discount,
                                 duration='once')
             session_data['discounts'] = [{
                 'coupon': stripe_coupon.id

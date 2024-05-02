@@ -9,25 +9,35 @@ from .models import OrderItem, Order
 from .forms import OrderCreateForms
 from .tasks import order_created
 from cart.cart import CartClass
+from cart.models import Cart, CartItem
 
 
 def order_create(request):
-    cart = CartClass(request)
+    session_key = request.session.session_key
+    # Finding the cart by ID session
+    cart = Cart.objects.get(session_key=session_key)
+    cart_item = cart.cart.all()
+    cart_item_copy = CartItem()
+    discount = None
+    coupon = cart_item_copy.coupon(request.session.get('coupon_id'))
+    total_price = cart_item_copy.get_total_price()
     if request.method == 'POST':
         form = OrderCreateForms(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
-            if cart.coupon:
-                order.coupon = cart.coupon
-                order.discount = cart.coupon.discount
+            if coupon:
+                discount = cart_item_copy.get_discount(coupon)
+                order.coupon = coupon
+                order.discount = discount
+                total_price -= discount
             order.save()
-            for item in cart:
+            for item in cart_item:
                 OrderItem.objects.create(order=order,
-                                        product=item['product'],
-                                        price=item['price'],
-                                        quantity=item['quantity'])
+                                        product=item.product,
+                                        price=item.product.price,
+                                        quantity=item.quantity)
             # clear the cart
-            cart.clear()
+            CartItem.objects.all().delete()
             # launch asynchronous task
             order_created.delay(order.id)
             # set the order in the session
@@ -38,7 +48,38 @@ def order_create(request):
         form = OrderCreateForms()
     return render(request,
                   'orders/order/create.html',
-                  {'cart': cart, 'form': form})
+                  {'cart_item': cart_item, 'form': form,
+                   'coupon': coupon, 'discount': discount,
+                   'total_price': total_price})
+
+# def order_create(request):
+#     cart = CartClass(request)
+#     if request.method == 'POST':
+#         form = OrderCreateForms(request.POST)
+#         if form.is_valid():
+#             order = form.save(commit=False)
+#             if cart.coupon:
+#                 order.coupon = cart.coupon
+#                 order.discount = cart.coupon.discount
+#             order.save()
+#             for item in cart:
+#                 OrderItem.objects.create(order=order,
+#                                         product=item['product'],
+#                                         price=item['price'],
+#                                         quantity=item['quantity'])
+#             # clear the cart
+#             cart.clear()
+#             # launch asynchronous task
+#             order_created.delay(order.id)
+#             # set the order in the session
+#             request.session['order_id'] = order.id
+#             # redirect for payment
+#             return redirect(reverse('payment:process'))
+#     else:
+#         form = OrderCreateForms()
+#     return render(request,
+#                   'orders/order/create.html',
+#                   {'cart': cart, 'form': form})
 
 
 @staff_member_required

@@ -53,12 +53,24 @@ def cart_remove(request, product_id):
 
 def cart_detail(request):
     session_key = request.session.session_key
+    #Finding the cart by ID session
     cart = Cart.objects.get(session_key=session_key)
     cart_item = cart.cart.all()
+    #Assigning a form to a variable
     coupon_apply_form = CouponApplyForm()
-    r = Recommender()
+    #Finding all products in current cart
     cart_products = [item.product for item in cart_item]
     cart_item_copy = CartItem()
+
+    #Trying to extract coupon ID
+    coupon_id = request.session.get('coupon_id')
+    coupon, discount = None, None
+    if coupon_id:
+        coupon = cart_item_copy.coupon(coupon_id)
+        discount = cart_item_copy.get_discount(coupon)
+    total_price = cart_item_copy.get_total_price() - discount
+
+    r = Recommender()
     if cart_products:
         recommended_products = r.suggest_products_for(cart_products, max_results=4)
     else:
@@ -67,7 +79,10 @@ def cart_detail(request):
                   {'cart_item': cart_item,
                    'coupon_apply_form': coupon_apply_form,
                    'recommended_products': recommended_products,
-                   'cart_item_copy': cart_item_copy})
+                   'cart_item_copy': cart_item_copy,
+                   'coupon': coupon,
+                   'discount': discount,
+                   'total_price': total_price})
 
 
 

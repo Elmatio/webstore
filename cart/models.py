@@ -48,6 +48,23 @@ class CartItem(models.Model):
         del self.session[settings.CART_SESSION_ID]
         self.save()
 
+    def coupon(self, coupon_id=None):
+        if coupon_id:
+            try:
+                return Coupon.objects.get(id=coupon_id)
+            except Coupon.DoesNotExist:
+                pass
+        return None
+
+    def get_discount(self, coupon=None):
+        if coupon:
+            return int((coupon.discount / 100) \
+                        * self.get_total_price())
+        return 0
+
+    def get_total_price_after_discount(self):
+        return self.get_total_price() - self.get_discount()
+
     class Meta:
         ordering = ['-created']
 
