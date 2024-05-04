@@ -31,8 +31,13 @@
             </div>
             <div>
                 <ul class="ul-nav">
-                    <li class="li-nav"><a href="#"><img class="account_icon_orange" src='{% static "img/account_icon_orange.png" %}'></a></li>
-                    <li class="li-nav"><a href="#"><img class="account_icon_light" src='{% static "img/account_icon_light.png" %}'></a></li>
+                    {% if request.user.is_authenticated %}
+                        <li class="li-nav"><a href="#"><img class="account_icon_orange" src='{% static "img/account_icon_orange.png" %}'></a></li>
+                        <li class="li-nav"><a href="{% url 'account:logout' %}"><img class="account_icon_light" src='{% static "img/account_icon_light.png" %}'></a></li>
+                    {% else %}
+                        <li class="li-nav"><a href="#"><img class="account_icon_orange" src='{% static "img/account_icon_orange.png" %}'></a></li>
+                        <li class="li-nav"><a href="{% url 'account:login' %}"><img class="account_icon_light" src='{% static "img/account_icon_light.png" %}'></a></li>
+                    {% endif %}
                 </ul>
             </div>
             <div>

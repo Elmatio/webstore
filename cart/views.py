@@ -68,7 +68,10 @@ def cart_detail(request):
     if coupon_id:
         coupon = cart_item_copy.coupon(coupon_id)
         discount = cart_item_copy.get_discount(coupon)
-    total_price = cart_item_copy.get_total_price() - discount
+
+    total_price = cart_item_copy.get_total_price()
+    if isinstance(discount, int):
+        total_price -= discount
 
     r = Recommender()
     if cart_products:
