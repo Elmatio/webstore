@@ -1,6 +1,6 @@
 {% extends "shop/base.html" %}
 
-{% block title %}Log-in{% endblock %}
+{% block title %}Авторизация{% endblock %}
 
 {% block content %}
     <h1>Авторизация</h1>
@@ -10,4 +10,9 @@
         {% csrf_token %}
         <p><input type="submit" value="Войти"></p>
     </form>
+    <p style="clear:both; font-size:12px;">
+        <a href="{% url 'account:register' %}" style="color: #F77B07;">
+            Ещё нет аккаунта? Зарегистрировать сейчас
+        </a>
+    </p>
 {% endblock %}

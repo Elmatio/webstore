@@ -42,7 +42,7 @@ class CartItem(models.Model):
 
     def get_total_count(self):
         items = CartItem.objects.all()
-        return sum([item.quantity for item in items])
+        return sum([item.quantity for item in items]) - 1
 
     def clear(self):
         del self.session[settings.CART_SESSION_ID]
