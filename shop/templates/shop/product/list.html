@@ -18,13 +18,17 @@
                 </li>
             {% endfor %}
         </ul>
+        <form method="get">
+            {{ filter.form.as_p }}
+            <input type="submit" value="Применить фильтр">
+        </form>
     </div>
     <div id="main" class="product-list" style="">
         <h1 style="margin-bottom: 10%; width: 100%;">{% if category %}{{ category.name }}{% else %}Товары{% endif %}</h1>
-        {% for product in products %}
+        {% for product in filter.qs %}
             <div class="item" style="padding-bottom: 0; position: relative;">
                     <a href="{{ product.get_absolute_url }}">
-                        <img style="" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+                        <img style="" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
                     </a>
                 <div style="margin-bottom: 1%; bottom: 30%; right: 25%; position: absolute;">
                 <a class="wrapper-break" style="padding-right: 0; text-align: right;" href="{{ product.get_absolute_url }}">

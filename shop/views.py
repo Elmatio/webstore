@@ -4,6 +4,7 @@ from cart.forms import AddProductForm
 from .recommender import Recommender
 from django.views.generic import ListView
 from django.db.models import Q
+from .filters import ProductFilter
 
 
 def product_list(request, category_slug=None):
@@ -13,16 +14,18 @@ def product_list(request, category_slug=None):
     slugs = [categories[i].slug for i in range(len(categories))]
     search_query = request.GET.get('search_field', None)
     if search_query:
-        products = Product.objects.filter(Q(name__icontains=search_query) | Q(description__iregex=search_query))
+        products = products.filter(Q(name__icontains=search_query) | Q(description__iregex=search_query))
     if category_slug in slugs:
         category = get_object_or_404(Category,
                                      slug=category_slug)
         products = products.filter(category=category)
+    product_filter = ProductFilter(request.GET, queryset=products)
+
     return render(request,
                   'shop/product/list.html',
                   {'category': category,
                    'categories': categories,
-                   'products': products})
+                   'filter': product_filter})
 
 
 def product_detail(request, id, slug):
