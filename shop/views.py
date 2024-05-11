@@ -13,12 +13,13 @@ def product_list(request, category_slug=None):
     products = Product.objects.filter(available=True)
     slugs = [categories[i].slug for i in range(len(categories))]
     search_query = request.GET.get('search_field', None)
-    if search_query:
-        products = products.filter(Q(name__icontains=search_query) | Q(description__iregex=search_query))
     if category_slug in slugs:
         category = get_object_or_404(Category,
                                      slug=category_slug)
         products = products.filter(category=category)
+    if search_query:
+       products = products.filter(Q(name__icontains=search_query) |
+                                  Q(description__iregex=search_query))
     product_filter = ProductFilter(request.GET, queryset=products)
 
     return render(request,
@@ -26,7 +27,6 @@ def product_list(request, category_slug=None):
                   {'category': category,
                    'categories': categories,
                    'filter': product_filter})
-
 
 def product_detail(request, id, slug):
     product = get_object_or_404(Product,

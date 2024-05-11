@@ -18,6 +18,30 @@
                 </li>
             {% endfor %}
         </ul>
+        <div class="wrapper">
+            <header>
+                <h2>Range price</h2>
+                <p>Slider</p>
+            </header>
+            <div class="price-input">
+                <div class="field">
+                    <span>от</span>
+                    <input type="number" class="input-min" value="2500">
+                </div>
+                <div class="separator">-</div>
+                <div class="field">
+                    <span>до</span>
+                    <input type="number" class="input-max" value="300000">
+                </div>
+            </div>
+            <div class="slider">
+                <div class="progress"></div>
+            </div>
+            <div class="range-input">
+                <input type="range" class="range-min" min="0" max="500000" value="2500">
+                <input type="range" class="range-max" min="0" max="500000" value="300000">
+            </div>
+        </div>
         <form method="get">
             {{ filter.form.as_p }}
             <input type="submit" value="Применить фильтр">
@@ -40,4 +64,66 @@
             </div>
         {% endfor %}
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function outputUpdate(vol) {
+            var output = document.querySelector('#volume');
+            output.value = vol;
+            output.style.left = vol;
+        }
+        const rangeInput = document.querySelectorAll(".range-input input"),
+        priceInput = document.querySelectorAll(".price-input input")
+        progress = document.querySelector(".slider .progress");
+
+        $(document).ready(function() {
+            updateSlider();
+        });
+
+        let priceGap = 40000;
+
+        priceInput.forEach(input => {
+            input.addEventListener("input", e =>{
+                let minVal = parseInt(priceInput[0].value),
+                maxVal = parseInt(priceInput[1].value);
+
+                if(maxVal - minVal >= priceGap){
+                    if(e.target.className === 'input-min'){
+                        rangeInput[0].value = minVal;
+                        progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
+                    }else{
+                        rangeInput[1].value = maxVal;
+                        progress.style.right = 100 - (maxVal / rangeInput[0].max) * 100 + '%';
+                    }
+                }else{
+                }
+            });
+        });
+
+        rangeInput.forEach(input => {
+            input.addEventListener("input", e =>{
+                let minVal = parseInt(rangeInput[0].value),
+                maxVal = parseInt(rangeInput[1].value);
+
+                if(maxVal - minVal < priceGap){
+                    if(e.target.className === 'range-min'){
+                        rangeInput[0].value = maxVal - priceGap;
+                    }else{
+                        rangeInput[1].value = minVal + priceGap;
+                    }
+                }else{
+                    priceInput[0].value = minVal;
+                    priceInput[1].value = maxVal;
+                    progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
+                    progress.style.right = 100 - (maxVal / rangeInput[0].max) * 100 + '%';
+                }
+            });
+        });
+        function updateSlider() {
+            let minVal = parseInt(rangeInput[0].value),
+                maxVal = parseInt(rangeInput[1].value);
+
+            progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
+            progress.style.right = 100 - (maxVal / rangeInput[0].max) * 100 + '%';
+        }
+    </script>
 {% endblock %}
