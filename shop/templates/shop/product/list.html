@@ -10,7 +10,7 @@
         <h3 style="color: #111111;">Каталог</h3>
         <ul>
             <li {% if not category %}class="selected"{% endif %}>
-                    <a href="{% url 'shop:product_list' %}">Все</a>
+                <a href="{% url 'shop:product_list' %}">Все</a>
             </li>
             {% for c in categories %}
                 <li {% if category.slug == c.slug %}class="selected"{% endif %}>
@@ -20,8 +20,7 @@
         </ul>
         <div class="wrapper">
             <header>
-                <h2>Range price</h2>
-                <p>Slider</p>
+                <h2>Цена</h2>
             </header>
             <div class="price-input">
                 <div class="field">
@@ -34,96 +33,52 @@
                     <input type="number" class="input-max" value="300000">
                 </div>
             </div>
-            <div class="slider">
-                <div class="progress"></div>
-            </div>
-            <div class="range-input">
-                <input type="range" class="range-min" min="0" max="500000" value="2500">
-                <input type="range" class="range-max" min="0" max="500000" value="300000">
-            </div>
         </div>
-        <form method="get">
-            {{ filter.form.as_p }}
-            <input type="submit" value="Применить фильтр">
-        </form>
     </div>
     <div id="main" class="product-list" style="">
         <h1 style="margin-bottom: 10%; width: 100%;">{% if category %}{{ category.name }}{% else %}Товары{% endif %}</h1>
-        {% for product in filter.qs %}
-            <div class="item" style="padding-bottom: 0; position: relative;">
+        <div id="product-container">
+            {% for product in filter %}
+                <div class="item" style="padding-bottom: 0; position: relative;">
                     <a href="{{ product.get_absolute_url }}">
                         <img style="" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
                     </a>
-                <div style="margin-bottom: 1%; bottom: 30%; right: 25%; position: absolute;">
-                <a class="wrapper-break" style="padding-right: 0; text-align: right;" href="{{ product.get_absolute_url }}">
-                    {{ product.name }}
-                </a>
-                <br>
-                <p style="text-align: right;">{{ product.price }} ₽</p>
+                    <div style="margin-bottom: 1%; bottom: 30%; right: 25%; position: absolute;">
+                        <a class="wrapper-break" style="padding-right: 0; text-align: right;" href="{{ product.get_absolute_url }}">
+                            {{ product.name }}
+                        </a>
+                        <br>
+                        <p style="text-align: right;">{{ product.price }} ₽</p>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function outputUpdate(vol) {
-            var output = document.querySelector('#volume');
-            output.value = vol;
-            output.style.left = vol;
-        }
-        const rangeInput = document.querySelectorAll(".range-input input"),
-        priceInput = document.querySelectorAll(".price-input input")
-        progress = document.querySelector(".slider .progress");
-
-        $(document).ready(function() {
-            updateSlider();
-        });
-
-        let priceGap = 40000;
-
-        priceInput.forEach(input => {
-            input.addEventListener("input", e =>{
-                let minVal = parseInt(priceInput[0].value),
-                maxVal = parseInt(priceInput[1].value);
-
-                if(maxVal - minVal >= priceGap){
-                    if(e.target.className === 'input-min'){
-                        rangeInput[0].value = minVal;
-                        progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
-                    }else{
-                        rangeInput[1].value = maxVal;
-                        progress.style.right = 100 - (maxVal / rangeInput[0].max) * 100 + '%';
-                    }
-                }else{
+        // Функция для обновления списка товаров
+        function updateProductList(minPrice, maxPrice) {
+            $.ajax({
+                url: '{% url "shop:product_list" %}',
+                type: 'GET',
+                data: {
+                    min_price: minPrice,
+                    max_price: maxPrice
+                },
+                success: function(data) {
+                    $('#product-container').html(data); // Обновляем содержимое контейнера товаров
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
                 }
             });
-        });
-
-        rangeInput.forEach(input => {
-            input.addEventListener("input", e =>{
-                let minVal = parseInt(rangeInput[0].value),
-                maxVal = parseInt(rangeInput[1].value);
-
-                if(maxVal - minVal < priceGap){
-                    if(e.target.className === 'range-min'){
-                        rangeInput[0].value = maxVal - priceGap;
-                    }else{
-                        rangeInput[1].value = minVal + priceGap;
-                    }
-                }else{
-                    priceInput[0].value = minVal;
-                    priceInput[1].value = maxVal;
-                    progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
-                    progress.style.right = 100 - (maxVal / rangeInput[0].max) * 100 + '%';
-                }
-            });
-        });
-        function updateSlider() {
-            let minVal = parseInt(rangeInput[0].value),
-                maxVal = parseInt(rangeInput[1].value);
-
-            progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
-            progress.style.right = 100 - (maxVal / rangeInput[0].max) * 100 + '%';
         }
+
+        // При изменении значений фильтра
+        $('.price-input input').on('input', function() {
+            var minPrice = $('.input-min').val();
+            var maxPrice = $('.input-max').val();
+            updateProductList(minPrice, maxPrice); // Обновляем список товаров с учетом новых значений фильтра
+        });
     </script>
 {% endblock %}
