@@ -18,6 +18,8 @@
                 </li>
             {% endfor %}
         </ul>
+
+        <!-- Фильтр по цене -->
         <div class="wrapper">
             <header>
                 <h2>Цена</h2>
@@ -34,106 +36,205 @@
                 </div>
             </div>
             <div class="slider">
-            <div class="progress"></div>
+                <div class="progress"></div>
             </div>
             <div class="range-input">
                 <input type="range" class="range-min" min="0" max="500000" value="2500">
                 <input type="range" class="range-max" min="0" max="500000" value="300000">
             </div>
         </div>
+
+        <!-- Фильтр по цвету -->
+        <!-- Фильтр по цвету -->
+<div class="wrapper">
+    <header>
+        <h2>Цвет</h2>
+    </header>
+    <div class="filter-options">
+        {% for color in colors %}
+            <label>
+                <input type="checkbox" name="color[]" class="filter-checkbox" value="{{ color }}">
+                {{ color|title }}
+            </label><br>
+        {% endfor %}
     </div>
+</div>
+
+<!-- Фильтр по производителю -->
+<div class="wrapper">
+    <header>
+        <h2>Производитель</h2>
+    </header>
+    <div class="filter-options">
+        {% for manufacturer in manufacturers %}
+            <label><input type="checkbox" name="manufacturer[]" class="filter-checkbox" value="{{ manufacturer }}">{{ manufacturer }}</label><br>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Фильтр по материалу -->
+<div class="wrapper">
+    <header>
+        <h2>Материал</h2>
+    </header>
+    <div class="filter-options">
+        {% for material in materials %}
+            <label><input type="checkbox" name="material[]" class="filter-checkbox" value="{{ material }}">{{ material }}</label><br>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Фильтр по длине -->
+<div class="wrapper">
+    <header>
+        <h2>Длина</h2>
+    </header>
+    <div class="filter-options">
+        {% for length in lengths %}
+            <label><input type="checkbox" name="length[]" class="filter-checkbox" value="{{ length }}">{{ length }}</label><br>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Фильтр по ширине -->
+<div class="wrapper">
+    <header>
+        <h2>Ширина</h2>
+    </header>
+    <div class="filter-options">
+        {% for width in widths %}
+            <label><input type="checkbox" name="width[]" class="filter-checkbox" value="{{ width }}">{{ width }}</label><br>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Фильтр по высоте -->
+<div class="wrapper">
+    <header>
+        <h2>Высота</h2>
+    </header>
+    <div class="filter-options">
+        {% for height in heights %}
+            <label><input type="checkbox" name="height[]" class="filter-checkbox" value="{{ height }}">{{ height }}</label><br>
+        {% endfor %}
+    </div>
+</div>
+
+
+    </div>
+
     <div id="main" class="product-list">
         <h1 style="margin-bottom: 10%; width: 100%;">{% if category %}{{ category.name }}{% else %}Товары{% endif %}</h1>
         <div id="product-container">
             {% include 'shop/product/list_partial.html' %}
         </div>
     </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // Функция для обновления списка товаров
-    function updateProductList(minPrice, maxPrice) {
-        $.ajax({
-            url: '', // текущий URL
-            type: 'GET',
-            data: {
-                min_price: minPrice,
-                max_price: maxPrice
-            },
-            success: function(data) {
-                $('#product-container').html(data); // Обновляем содержимое контейнера товаров
-            },
-            error: function(xhr, errmsg, err) {
-                console.log(xhr.status + ": " + xhr.responseText);
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+function updateProductList() {
+    let filters = {
+        min_price: $('.input-min').val(),
+        max_price: $('.input-max').val(),
+        color: [],
+        manufacturer: [],
+        material: [],
+        length: [],
+        width: [],
+        height: []
+    };
+
+    $('.filter-checkbox:checked').each(function() {
+        let name = $(this).attr('name');
+        let value = $(this).val();
+        console.log("Name:", name, "Value:", value); // Отладочный вывод
+        if (name.endsWith('[]')) {
+            name = name.slice(0, -2); // Убираем квадратные скобки из имени
+            if (filters[name] === undefined) {
+                filters[name] = []; // Проверяем, существует ли массив, если нет, создаем его
             }
-        });
-    }
-
-    // Инициализация слайдера и ввода значений
-    function initializeSlider() {
-        let minVal = parseInt(priceInput[0].value),
-            maxVal = parseInt(priceInput[1].value);
-
-        rangeInput[0].value = minVal;
-        rangeInput[1].value = maxVal;
-
-        progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
-        progress.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + '%';
-    }
-
-    // При изменении значений фильтра
-    $('.price-input input').on('input', function() {
-        var minPrice = $('.input-min').val();
-        var maxPrice = $('.input-max').val();
-        updateProductList(minPrice, maxPrice); // Обновляем список товаров с учетом новых значений фильтра
+            filters[name].push(value);
+        } else {
+            filters[name] = value;
+        }
     });
 
-    const rangeInput = document.querySelectorAll(".range-input input"),
-    priceInput = document.querySelectorAll(".price-input input"),
-    progress = document.querySelector(".slider .progress");
-
-    let priceGap = 40000;
-
-    priceInput.forEach(input => {
-        input.addEventListener("input", e => {
-            let minVal = parseInt(priceInput[0].value),
-                maxVal = parseInt(priceInput[1].value);
-
-            if (maxVal - minVal >= priceGap) {
-                if (e.target.className === 'input-min') {
-                    rangeInput[0].value = minVal;
-                    progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
-                } else {
-                    rangeInput[1].value = maxVal;
-                    progress.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + '%';
-                }
-                updateProductList(minVal, maxVal);
-            }
-        });
+    $.ajax({
+        url: '',
+        type: 'GET',
+        data: filters,
+        success: function(data) {
+            $('#product-container').html(data);
+        },
+        error: function(xhr, errmsg, err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
     });
+}
 
-    rangeInput.forEach(input => {
-        input.addEventListener("input", e => {
-            let minVal = parseInt(rangeInput[0].value),
-                maxVal = parseInt(rangeInput[1].value);
 
-            if (maxVal - minVal < priceGap) {
-                if (e.target.className === 'range-min') {
-                    rangeInput[0].value = maxVal - priceGap;
+
+
+        function initializeSlider() {
+            let minVal = parseInt($('.input-min').val()),
+                maxVal = parseInt($('.input-max').val());
+
+            $('.range-min').val(minVal);
+            $('.range-max').val(maxVal);
+
+            $('.progress').css({
+                left: (minVal / $('.range-min').attr('max')) * 100 + '%',
+                right: 100 - (maxVal / $('.range-max').attr('max')) * 100 + '%'
+            });
+        }
+
+        $(document).on('input', '.price-input input', function() {
+            updateProductList();
+        });
+
+        $(document).on('change', '.filter-checkbox', function() {
+            updateProductList();
+        });
+
+        $('.range-input input').on('input', function() {
+            let minVal = parseInt($('.range-min').val()),
+                maxVal = parseInt($('.range-max').val());
+
+            if (maxVal - minVal < 40000) {
+                if ($(this).hasClass('range-min')) {
+                    $('.range-min').val(maxVal - 40000);
                 } else {
-                    rangeInput[1].value = minVal + priceGap;
+                    $('.range-max').val(minVal + 40000);
                 }
             } else {
-                priceInput[0].value = minVal;
-                priceInput[1].value = maxVal;
-                progress.style.left = (minVal / rangeInput[0].max) * 100 + '%';
-                progress.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + '%';
-                updateProductList(minVal, maxVal);
+                $('.input-min').val(minVal);
+                $('.input-max').val(maxVal);
+                $('.progress').css({
+                    left: (minVal / $('.range-min').attr('max')) * 100 + '%',
+                    right: 100 - (maxVal / $('.range-max').attr('max')) * 100 + '%'
+                });
+                updateProductList();
             }
         });
-    });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        initializeSlider();
-    });
-</script>
+        $(document).ready(function() {
+            initializeSlider();
+        });
+$('.filter-checkbox:checked').each(function() {
+    let name = $(this).attr('name');
+    let value = $(this).val();
+    console.log("Name:", name, "Value:", value); // Отладочный вывод
+    if (name.slice(-2) === '[]') {
+        name = name.slice(0, -2); // Удалить квадратные скобки
+        if (!filters[name]) {
+            filters[name] = []; // Создать массив, если он не существует
+        }
+        filters[name].push(value);
+    } else {
+        filters[name] = value; // Просто установить значение, если это не массив
+    }
+});
+
+
+    </script>
 {% endblock %}

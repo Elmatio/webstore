@@ -9,6 +9,44 @@ from .filters import ProductFilter
 
 
 def product_list(request, category_slug=None):
+    colors_list = [
+        'зелёный', 'бежевый',
+        'белый', 'графит',
+        'оливковый', 'оранжевый',
+        'коричневый',
+    ]
+
+    manufacturers_list = [
+        'Беларусь',
+        'Россия',
+    ]
+
+    materials_list = [
+        'ткань',
+    ]
+
+    lengths_list = [
+        '60',
+        '80',
+        '90',
+        '120',
+        '245',
+    ]
+
+    widths_list = [
+        '60',
+        '80',
+        '99',
+        '120'
+    ]
+
+    heights_list = [
+        '60',
+        '88',
+        '90',
+        '100',
+    ]
+
     category = None
     categories = Category.objects.all()
     products = Product.objects.all()
@@ -20,15 +58,77 @@ def product_list(request, category_slug=None):
     # Фильтр по цене
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    if min_price:
-        products = products.filter(price__gte=min_price)
-    if max_price:
-        products = products.filter(price__lte=max_price)
+    if min_price and max_price:
+        products = products.filter(price__gte=min_price, price__lte=max_price)
+
+    # Фильтры по цвету, производителю, материалу, длине, ширине и высоте
+    colors = request.GET.getlist('color[]')
+    print(colors)
+    products_colors = []
+    if colors:
+        print(1)
+        for i in products:
+            for j in colors:
+                if j.lower() in i.description.lower():
+                    products_colors.append(i.name)
+        products = products.filter(name__in=products_colors)
+        print(products)
+
+    manufacturers = request.GET.getlist('manufacturer[]')
+    products_manufacturers = []
+    if manufacturers:
+        for i in products:
+            for j in manufacturers:
+                if j in i.description:
+                    products_manufacturers.append(i.name)
+        products = products.filter(name__in=products_manufacturers)
+
+    materials = request.GET.getlist('material[]')
+    products_materials = []
+    if materials:
+        for i in products:
+            for j in materials:
+                if j in i.description:
+                    products_materials.append(i.name)
+        products = products.filter(name__in=products_materials)
+
+    lengths = request.GET.getlist('length[]')
+    products_lengths = []
+    if lengths:
+        for i in products:
+            for j in lengths:
+                if "Длина (см): " + j in i.description:
+                    products_lengths.append(i.name)
+        products = products.filter(name__in=products_lengths)
+
+    widths = request.GET.getlist('width[]')
+    products_widths = []
+    if widths:
+        for i in products:
+            for j in widths:
+                if "Ширина (см): " + j in i.description:
+                    products_widths.append(i.name)
+        products = products.filter(name__in=products_widths)
+
+    heights = request.GET.getlist('height[]')
+    products_heights = []
+    if heights:
+        for i in products:
+            for j in heights:
+                if "Высота (см): " + j in i.description:
+                    products_heights.append(i.name)
+        products = products.filter(name__in=products_heights)
 
     context = {
         'category': category,
         'categories': categories,
         'filter': products,
+        'colors': colors_list,
+        'manufacturers': manufacturers_list,
+        'materials': materials_list,
+        'lengths': lengths_list,
+        'widths': widths_list,
+        'heights': heights_list,
     }
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
