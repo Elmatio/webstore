@@ -1,34 +1,37 @@
-import django_filters
-from django.db.models import Q
-from .models import Product
-import re
+colors_list = [
+    'зелёный', 'бежевый',
+    'белый', 'графит',
+    'оливковый', 'оранжевый',
+    'коричневый',
+]
 
+manufacturers_list = [
+    'Беларусь',
+    'Россия',
+]
 
-class ProductFilter(django_filters.FilterSet):
-    min_price = django_filters.NumberFilter(field_name='price', lookup_expr='gte', label='Цена от')
-    max_price = django_filters.NumberFilter(field_name='price', lookup_expr='lte', label='Цена до')
-    color = django_filters.CharFilter(method='filter_by_color', label='Цвет')
-    manufacturer = django_filters.CharFilter(field_name='description', lookup_expr='icontains', label='Производитель')
-    material = django_filters.CharFilter(method='filter_by_material', label='Материал')
-    country = django_filters.CharFilter(method='filter_by_country', label='Страна производитель')
-    length = django_filters.NumberFilter(method='filter_by_length', label='Длина')
-    width = django_filters.NumberFilter(method='filter_by_width', label='Ширина')
+materials_list = [
+    'ткань',
+]
 
-    class Meta:
-        model = Product
-        fields = []
+lengths_list = [
+    '60',
+    '80',
+    '90',
+    '120',
+    '245',
+]
 
-    def filter_by_color(self, queryset, name, value):
-        return queryset.filter(Q(name__iregex=value) | Q(description__iregex=f'Цвет: {value}'))
+widths_list = [
+    '60',
+    '80',
+    '99',
+    '120'
+]
 
-    def filter_by_material(self, queryset, name, value):
-        return queryset.filter(Q(name__iregex=value) | Q(description__iregex=f'Материал: {value}'))
-
-    def filter_by_country(self, queryset, name, value):
-        return queryset.filter(Q(name__iregex=value) | Q(description__iregex=f'Страна-производитель: {value}'))
-
-    def filter_by_length(self, queryset, name, value):
-        return queryset.filter(Q(name__iregex=value) | Q(description__iregex=f'Длина (см): {value}'))
-
-    def filter_by_width(self, queryset, name, value):
-        return queryset.filter(Q(name__iregex=value) | Q(description__iregex=f'Ширина (см): {value}'))
+heights_list = [
+    '60',
+    '88',
+    '90',
+    '100',
+]

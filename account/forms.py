@@ -5,18 +5,19 @@ from django.contrib.auth.models import User
 from account.models import CustomUser
 
 
-# class UserEditForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'last_name', 'email']
-#
-#     def clean_email(self):
-#         data = self.cleaned_data['email']
-#         qs = User.objects.exclude(id=self.instance.id)\
-#             .filter(email=data)
-#         if qs.exists():
-#             raise forms.ValidationError('Email already in use.')
-#         return data
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'last_name', 'first_name', 'middle_name', 'passport',
+                  'email', 'born_date', 'phone', 'address']
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        qs = CustomUser.objects.exclude(id=self.instance.id)\
+            .filter(email=data)
+        if qs.exists():
+            raise forms.ValidationError('Указанный адрес электронной почты уже существует.')
+        return data
 
 
 # class ProfileEditForm(forms.ModelForm):

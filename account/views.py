@@ -1,12 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.views.generic import CreateView
 
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, UserEditForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-from .models import Profile
+
+from .models import CustomUser
 
 
 def user_login(request):
@@ -50,4 +51,28 @@ def register(request):
         form = RegistrationForm()
     return render(request,
                   'account/registration.html',
+                  {'form': form})
+
+
+@login_required
+def profile(request, user_id):
+    user = user_id
+    profile = CustomUser.objects.get(id=user)
+    return render(request,
+                  'account/profile.html',
+                  {'profile': profile})
+
+
+@login_required
+def edit(request):
+    profile = get_object_or_404(CustomUser, id=request.user.id)
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('account:profile', user_id=request.user.id)
+    else:
+        form = UserEditForm(instance=profile)
+    return render(request,
+                  'account/edit.html',
                   {'form': form})

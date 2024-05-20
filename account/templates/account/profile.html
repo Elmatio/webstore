@@ -1,0 +1,46 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+    <div class="profile-container">
+        <div class="profile-data">
+            <h2>Ваш профиль</h2>
+            <a href="{% url 'account:edit' %}"><button class="beauty-button">Редактировать профиль</button></a>
+        </div>
+        <br>
+        <div class="profile-data">
+            <h3>Фамилия</h3>
+            <h4>{{ profile.last_name }}</h4>
+        </div>
+        <div class="profile-data">
+            <h3>Имя</h3>
+            <h4>{{ profile.first_name }}</h4>
+        </div>
+        <div class="profile-data">
+            <h3>Отчество</h3>
+            <h4>{{ profile.middle_name }}</h4>
+        </div>
+        <div class="profile-data">
+            <h3>Паспортные данные</h3>
+            <h4>{{ profile.passport }}</h4>
+        </div>
+        <div class="profile-data">
+            <h3>E-mail</h3>
+            <h4>{{ profile.email }}</h4>
+        </div>
+        <div class="profile-data">
+            <h3>Дата рождения</h3>
+            <h4>{{ profile.born_date }}</h4>
+        </div>
+        <div class="profile-data">
+            <h3>Номер телефона</h3>
+            <h4>{{ profile.phone }}</h4>
+        </div>
+        <div class="profile-data">
+            <h3>Адрес проживания</h3>
+            <h4>{{ profile.address }}</h4>
+        </div>
+        <a href="{% url 'account:logout' %}"><button class="beauty-button">Выйти из личного кабинета</button></a>
+    </div>
+{% endblock %}

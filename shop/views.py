@@ -5,48 +5,10 @@ from cart.forms import AddProductForm
 from .recommender import Recommender
 from django.views.generic import ListView
 from django.db.models import Q
-from .filters import ProductFilter
+from .filters import *
 
 
 def product_list(request, category_slug=None):
-    colors_list = [
-        'зелёный', 'бежевый',
-        'белый', 'графит',
-        'оливковый', 'оранжевый',
-        'коричневый',
-    ]
-
-    manufacturers_list = [
-        'Беларусь',
-        'Россия',
-    ]
-
-    materials_list = [
-        'ткань',
-    ]
-
-    lengths_list = [
-        '60',
-        '80',
-        '90',
-        '120',
-        '245',
-    ]
-
-    widths_list = [
-        '60',
-        '80',
-        '99',
-        '120'
-    ]
-
-    heights_list = [
-        '60',
-        '88',
-        '90',
-        '100',
-    ]
-
     category = None
     categories = Category.objects.all()
     products = Product.objects.all()
@@ -63,7 +25,6 @@ def product_list(request, category_slug=None):
 
     # Фильтры по цвету, производителю, материалу, длине, ширине и высоте
     colors = request.GET.getlist('color[]')
-    print(colors)
     products_colors = []
     if colors:
         print(1)
@@ -72,7 +33,6 @@ def product_list(request, category_slug=None):
                 if j.lower() in i.description.lower():
                     products_colors.append(i.name)
         products = products.filter(name__in=products_colors)
-        print(products)
 
     manufacturers = request.GET.getlist('manufacturer[]')
     products_manufacturers = []

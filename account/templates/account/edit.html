@@ -1,0 +1,15 @@
+{% extends 'shop/base.html' %}}
+
+
+{% block title %}Редактировать профиль{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Редактировать профиль</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Сохранить изменения">
+        </form>
+    </div>
+{% endblock %}
