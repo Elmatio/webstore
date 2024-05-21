@@ -721,8 +721,8 @@ input::-webkit-inner-spin-button {
 .profile-data {
     display: flex;
     justify-content: space-between;
-    padding: 5px 0; /* Уменьшаем вертикальные отступы */
-    position: relative; /* Добавляем позиционирование для псевдоэлемента */
+    padding: 5px 0;
+    position: relative;
 }
 
 .profile-data::after {
@@ -764,4 +764,156 @@ input::-webkit-inner-spin-button {
 
 .beauty-button:hover {
     cursor: pointer;
+}
+
+/* Hide the default checkbox */
+.filter-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Custom checkbox appearance */
+.filter-checkbox + label {
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 20px;
+  user-select: none;
+  margin-bottom: 10px; /* Add margin between checkbox elements */
+}
+
+/* Optional: To ensure consistent spacing even without <br> elements */
+.filter-options label {
+  display: block;
+  margin-bottom: 10px; /* Add margin between label elements */
+}
+
+.filter-checkbox + label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #CB22ED;
+  border-radius: 3px;
+  background-color: #fff;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.filter-checkbox:checked + label::before {
+  background-color: #fff;
+}
+
+.filter-checkbox + label::after {
+  content: '✓';
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #CB22ED;
+  transition: opacity 0.2s, transform 0.2s;
+  opacity: 0;
+  transform: scale(0) rotate(45deg);
+}
+
+.filter-checkbox:checked + label::after {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+}
+
+/* Disabled checkbox */
+.filter-checkbox:disabled + label::before {
+  box-shadow: none;
+  border-color: #bbb;
+  background-color: #e9e9e9;
+}
+
+.filter-checkbox:disabled:checked + label::after {
+  color: #777;
+}
+
+.filter-checkbox:disabled + label {
+  color: #aaa;
+}
+
+/* Accessibility */
+.filter-checkbox:focus + label::before {
+  box-shadow: inset 0 1px 3px rgba(0,0,0, .1), 0 0 0 5px rgba(240, 160, 22, .3);
+}
+
+.filter-checkbox + label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #F77B07;
+  border-radius: 3px;
+  background-color: #fff;
+  transition: background-color 0.2s, border-color 0.2s;
+  text-align: center; /* Центрирование галочки */
+}
+
+.filter-checkbox:checked + label::before {
+  background-color: #fff;
+}
+
+.filter-checkbox + label::after {
+  content: '✓';
+  position: absolute;
+  left: 5px;
+  top: 2%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #F77B07;
+  transition: opacity 0.2s, transform 0.2s;
+  opacity: 0;
+}
+
+.filter-checkbox:checked + label::after {
+  opacity: 1;
+}
+
+.change-count {
+    background: #e0e0e0;
+    color: black;
+    border: 2px solid #e7e7e7;
+    width: 30px;
+    height: 30px;
+}
+
+.change-count:hover {
+    cursor: pointer;
+    background: #b0b0b0;
+    border: 2px solid #b0b0b0;
+}
+
+.change-count:focus {
+    box-shadow: inset 0 1px 3px rgba(0,0,0, .1), 0 0 0 3px rgba(176, 176, 176, .3);
+}
+
+.quantity-input {
+    border: none;
+    width: 20%;
+    text-align: center;
+}
+
+.quantity-input:focus {
+  outline: none;
+  border-color: transparent;
+}
+
+.count-products {
+    padding-left: 8%;
+}
+
+.count-products-detail {
+    width: 25%;
 }

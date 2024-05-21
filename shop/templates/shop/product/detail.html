@@ -21,10 +21,10 @@
 <!--            <button type="button" data-action="plus">+</button>-->
 <!--            <input type="submit" value="Добавить в корзину">-->
 <!--        </form>-->
-        <form class="count-products" action="{% url 'cart:cart_add' product.id %}" method="POST">
+        <form class="count-products-detail" action="{% url 'cart:cart_add' product.id %}" method="POST">
             {% csrf_token %}
             <button type="button" data-action="minus" class="change-count">-</button>
-            <input data-counter name="quantity" value="1" min="1">
+            <input data-counter name="quantity" value="1" min="1" class="quantity-input">
             <button type="button" data-action="plus" class="change-count">+</button>
             <input type="submit" class="add_to_cart" value="Добавить в корзину">
         </form>

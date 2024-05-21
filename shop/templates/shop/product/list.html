@@ -45,80 +45,82 @@
         </div>
 
         <!-- Фильтр по цвету -->
-        <!-- Фильтр по цвету -->
-<div class="wrapper">
-    <header>
-        <h2>Цвет</h2>
-    </header>
-    <div class="filter-options">
-        {% for color in colors %}
-            <label>
-                <input type="checkbox" name="color[]" class="filter-checkbox" value="{{ color }}">
-                {{ color|title }}
-            </label><br>
-        {% endfor %}
-    </div>
-</div>
+        <div class="wrapper">
+            <header>
+                <h2>Цвет</h2>
+            </header>
+                <div class="filter-options">
+                    {% for color in colors %}
+                        <input type="checkbox" name="color[]" class="filter-checkbox" value="{{ color }}" id="color{{ forloop.counter }}">
+                        <label for="color{{ forloop.counter }}">{{ color }}</label><br>
+                    {% endfor %}
+                </div>
+        </div>
 
 <!-- Фильтр по производителю -->
-<div class="wrapper">
-    <header>
-        <h2>Производитель</h2>
-    </header>
-    <div class="filter-options">
-        {% for manufacturer in manufacturers %}
-            <label><input type="checkbox" name="manufacturer[]" class="filter-checkbox" value="{{ manufacturer }}">{{ manufacturer }}</label><br>
-        {% endfor %}
-    </div>
-</div>
+        <div class="wrapper">
+            <header>
+                <h2>Производитель</h2>
+            </header>
+                <div class="filter-options">
+                    {% for manufacturer in manufacturers %}
+                        <input type="checkbox" name="manufacturer[]" class="filter-checkbox" value="{{ manufacturer }}" id="manufacturer{{ forloop.counter }}">
+                        <label for="manufacturer{{ forloop.counter }}">{{ manufacturer }}</label><br>
+                    {% endfor %}
+                </div>
+        </div>
 
 <!-- Фильтр по материалу -->
-<div class="wrapper">
-    <header>
-        <h2>Материал</h2>
-    </header>
-    <div class="filter-options">
-        {% for material in materials %}
-            <label><input type="checkbox" name="material[]" class="filter-checkbox" value="{{ material }}">{{ material }}</label><br>
-        {% endfor %}
-    </div>
-</div>
+        <div class="wrapper">
+            <header>
+                <h2>Материал</h2>
+            </header>
+                <div class="filter-options">
+                    {% for material in materials %}
+                        <input type="checkbox" name="material[]" class="filter-checkbox" value="{{ material }}" id="material{{ forloop.counter }}">
+                        <label for="material{{ forloop.counter }}">{{ material }}</label><br>
+                    {% endfor %}
+                </div>
+        </div>
 
 <!-- Фильтр по длине -->
-<div class="wrapper">
-    <header>
-        <h2>Длина</h2>
-    </header>
-    <div class="filter-options">
-        {% for length in lengths %}
-            <label><input type="checkbox" name="length[]" class="filter-checkbox" value="{{ length }}">{{ length }}</label><br>
-        {% endfor %}
-    </div>
-</div>
+        <div class="wrapper">
+            <header>
+                <h2>Длина</h2>
+            </header>
+                <div class="filter-options">
+                    {% for length in lengths %}
+                        <input type="checkbox" name="length[]" class="filter-checkbox" value="{{ length }}" id="length{{ forloop.counter }}">
+                        <label for="length{{ forloop.counter }}">{{ length }}</label><br>
+                    {% endfor %}
+                </div>
+        </div>
 
 <!-- Фильтр по ширине -->
-<div class="wrapper">
-    <header>
-        <h2>Ширина</h2>
-    </header>
-    <div class="filter-options">
-        {% for width in widths %}
-            <label><input type="checkbox" name="width[]" class="filter-checkbox" value="{{ width }}">{{ width }}</label><br>
-        {% endfor %}
-    </div>
-</div>
+        <div class="wrapper">
+            <header>
+                <h2>Ширина</h2>
+            </header>
+                <div class="filter-options">
+                    {% for width in widths %}
+                        <input type="checkbox" name="width[]" class="filter-checkbox" value="{{ width }}" id="width{{ forloop.counter }}">
+                        <label for="width{{ forloop.counter }}">{{ width }}</label><br>
+                    {% endfor %}
+                </div>
+        </div>
 
 <!-- Фильтр по высоте -->
-<div class="wrapper">
-    <header>
-        <h2>Высота</h2>
-    </header>
-    <div class="filter-options">
-        {% for height in heights %}
-            <label><input type="checkbox" name="height[]" class="filter-checkbox" value="{{ height }}">{{ height }}</label><br>
-        {% endfor %}
-    </div>
-</div>
+        <div class="wrapper">
+            <header>
+                <h2>Высота</h2>
+            </header>
+                <div class="filter-options">
+                    {% for height in heights %}
+                        <input type="checkbox" name="height[]" class="filter-checkbox" value="{{ height }}" id="height{{ forloop.counter }}">
+                        <label for="height{{ forloop.counter }}">{{ height }}</label><br>
+                    {% endfor %}
+                </div>
+        </div>
 
 
     </div>
