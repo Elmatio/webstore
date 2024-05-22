@@ -110,3 +110,8 @@ def product_detail(request, id, slug):
                   {'product': product,
                    'cart_product': cart_product,
                    'recommended_products': recommended_products})
+
+
+def about_us(request):
+    return render(request,
+                  'shop/navigation/about.html')

@@ -13,14 +13,6 @@
             </a>
         </h2>
         <p class="price">{{ product.price }} ₽</p>
-<!--        <form action="{% url 'cart:cart_add' product.id %}" method="post">-->
-<!--            {{ cart_product }}-->
-<!--            {% csrf_token %}-->
-<!--            <button type="button" data-action="minus">-</button>-->
-<!--            <p data-counter>1</p>-->
-<!--            <button type="button" data-action="plus">+</button>-->
-<!--            <input type="submit" value="Добавить в корзину">-->
-<!--        </form>-->
         <form class="count-products-detail" action="{% url 'cart:cart_add' product.id %}" method="POST">
             {% csrf_token %}
             <button type="button" data-action="minus" class="change-count">-</button>
@@ -28,7 +20,9 @@
             <button type="button" data-action="plus" class="change-count">+</button>
             <input type="submit" class="add_to_cart" value="Добавить в корзину">
         </form>
-        {{ product.description|linebreaks }}
+        <div style="margin-top:7%;">
+            {{ product.description|linebreaks }}
+        </div>
         {% if recommended_products %}
             <div class="recommendations">
                 <h3>Вместе с этим товаров покупают</h3>
@@ -46,10 +40,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $(document).on('click', '.count-products button', function() {
+            $(document).on('click', '.change-count', function() {
                 var row = $(this).closest('.product-detail');
 
-                var quantityElement = row.find('[data-counter]');
+                var quantityElement = row.find('.quantity-input');
                 var currentQuantity = parseInt(quantityElement.val());
                 var action = $(this).data('action');
                 if (action === 'plus') {
@@ -60,8 +54,7 @@
 
                 quantityElement.val(currentQuantity);
             });
-        });
-        $(document).ready(function() {
+
             $(document).on('click', '.add_to_cart', function() {
                 alert('Товар успешно добавлен в корзину');
             });

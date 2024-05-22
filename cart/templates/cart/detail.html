@@ -51,15 +51,6 @@
                                     <button type="button" data-action="minus" class="change-count">-</button>
                                     <input class="quantity-input" data-counter value="{{ item.quantity }}">
                                     <button type="button" data-action="plus" class="change-count">+</button>
-<!--                                    <form class="form_plus" action="{% url 'cart:cart_add' product.id %}" method="post">-->
-<!--&lt;!&ndash;                                        {{ item.update_quantity_form.quantity }}&ndash;&gt;-->
-<!--&lt;!&ndash;                                        {{ item.update_quantity_form.override }}&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <input type="submit" value="Обновить">&ndash;&gt;-->
-<!--                                            {{ item.update_quantity_form.quantity }}-->
-<!--                                            {{ item.update_quantity_form.override }}-->
-<!--                                            <input type="button" data-action="plus" value="+">-->
-<!--                                        {% csrf_token %}-->
-<!--                                    </form>-->
                                 </td>
                                 <td>
                                     <form action="{% url 'cart:cart_remove' product.id %}" method="post">

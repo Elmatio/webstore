@@ -882,7 +882,7 @@ input::-webkit-inner-spin-button {
 }
 
 .change-count {
-    background: #e0e0e0;
+    background: #fff;
     color: black;
     border: 2px solid #e7e7e7;
     width: 30px;
@@ -911,9 +911,49 @@ input::-webkit-inner-spin-button {
 }
 
 .count-products {
-    padding-left: 8%;
+    padding-left:5%;
 }
 
 .count-products-detail {
     width: 25%;
+    margin-left: 25%;
+}
+    .product-card {
+        position: relative;
+        overflow: hidden;
+        background-color: #fff; /* Белый фон по умолчанию */
+        transition: background-color 0.3s ease-in-out; /* Плавный переход фона */
+    }
+
+    .product-hover {
+        display: none;
+        position: absolute;
+        top: 100%; /* Подменю будет отображаться ниже основного содержимого */
+        left: 0;
+        width: 100%;
+        background-color: #fff; /* Белый фон подменю */
+        color: #000; /* Черный текст */
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border-top: 1px solid #ddd; /* Граница для разделения */
+        transition: all 0.3s ease-in-out;
+    }
+
+    .product-card:hover .product-hover {
+        display: flex;
+    }
+
+    .add_to_cart {
+        background-color: #ff6600;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+.list-img {
+    width: 10px;
+    height: 10px;
 }

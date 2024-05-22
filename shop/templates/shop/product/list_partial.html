@@ -1,16 +1,68 @@
 {% load static %}
 
 {% for product in filter %}
-    <div class="item" style="padding-bottom: 0; position: relative;">
+    <div class="item product-card" style="padding-bottom: 0;">
         <a href="{{ product.get_absolute_url }}">
-            <img style="" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" style="max-width: 100%; max-height: 200px; width: auto; !important">
         </a>
-        <div style="margin-bottom: 1%; bottom: 30%; right: 25%; position: absolute;">
-            <a class="wrapper-break" style="padding-right: 0; text-align: right;" href="{{ product.get_absolute_url }}">
-                {{ product.name }}
-            </a>
-            <br>
-            <p style="text-align: right;">{{ product.price }} ₽</p>
+        <div class="product-info" style="text-align: center; position: relative; height: 100px; ">
+            <a class="product-name" href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+            <p class="product-price">{{ product.price }} ₽</p>
+            <div class="product-hover">
+                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-form">
+                    {% csrf_token %}
+                    <button type="button" data-action="minus" class="change-count">-</button>
+                    <input data-counter name="quantity" value="1" min="1" class="quantity-input">
+                    <button type="button" data-action="plus" class="change-count">+</button>
+                    <input type="submit" class="add_to_cart" value="Добавить в корзину">
+                </form>
+            </div>
         </div>
     </div>
 {% endfor %}
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Обработка hover-эффекта для отображения подменю
+        $('.product-card').hover(
+            function() {
+                $(this).find('.product-hover').fadeIn(200);
+            },
+            function() {
+                $(this).find('.product-hover').fadeOut(200);
+            }
+        );
+
+        // Обработка изменения количества товара
+        $(document).on('click', '.change-count', function() {
+            var quantityElement = $(this).siblings('.quantity-input');
+            var currentQuantity = parseInt(quantityElement.val());
+            var action = $(this).data('action');
+            if (action === 'plus') {
+                currentQuantity++;
+            } else if (action === 'minus' && currentQuantity > 1) {
+                currentQuantity--;
+            }
+            quantityElement.val(currentQuantity);
+        });
+
+        // AJAX-отправка формы добавления товара в корзину
+        $(document).on('submit', '.add-to-cart-form', function(event) {
+            event.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function(response) {
+                    alert('Товар успешно добавлен в корзину');
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
