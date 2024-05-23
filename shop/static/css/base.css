@@ -300,6 +300,7 @@ ul.errorlist {
 
 .recommendations {
     clear:both;
+    background: #f6f6f9;
 }
 
 .recommendations div {
@@ -912,6 +913,7 @@ input::-webkit-inner-spin-button {
 
 .count-products {
     padding-left:5%;
+    padding-right: 0;
 }
 
 .count-products-detail {
