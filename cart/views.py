@@ -36,13 +36,6 @@ def cart_add(request, product_id):
     cart_item.save()
     return redirect('cart:cart_detail')
 
-# @require_POST
-# def cart_remove(request, product_id):
-#     cart = CartClass(request)
-#     product = get_object_or_404(Product, id=product_id)
-#     cart.remove(product)
-#     return redirect('cart:cart_detail')
-
 
 @require_POST
 def cart_remove(request, product_id):
@@ -53,16 +46,16 @@ def cart_remove(request, product_id):
 
 def cart_detail(request):
     session_key = request.session.session_key
-    #Finding the cart by ID session
+    #Нахождение корзины по айди сессии
     cart = Cart.objects.get(session_key=session_key)
     cart_item = cart.cart.all()
     #Assigning a form to a variable
     coupon_apply_form = CouponApplyForm()
-    #Finding all products in current cart
+    #Нахождение всех товаров в корзине
     cart_products = [item.product for item in cart_item]
     cart_item_copy = CartItem()
 
-    #Trying to extract coupon ID
+    #Попытка извлечь айди купона
     coupon_id = request.session.get('coupon_id')
     coupon, discount = None, None
     if coupon_id:
@@ -86,35 +79,6 @@ def cart_detail(request):
                    'coupon': coupon,
                    'discount': discount,
                    'total_price': total_price})
-
-
-
-# def cart_detail(request):
-#     cart = Cart(request)
-#     for item in cart:
-#         item['update_quantity_form'] = AddProductForm(initial={
-#             'quantity': item['quantity'],
-#             'override': True})
-#     coupon_apply_form = CouponApplyForm()
-#     r = Recommender()
-#     cart_products = [item['product'] for item in cart]
-#     if cart_products:
-#         recommended_products = r.suggest_products_for(cart_products,
-#                                                       max_results=4)
-#     else:
-#         recommended_products = []
-#
-#     # Load saved data from session if available
-#     saved_product_count = request.session.get('product_count')
-#     if saved_product_count is not None:
-#         # Update cart with saved product count
-#         cart.update_product_count(saved_product_count)
-#
-#     return render(request,
-#                   'cart/detail.html',
-#                   {'cart': cart,
-#                    'coupon_apply_form': coupon_apply_form,
-#                    'recommended_products': recommended_products})
 
 
 @require_POST
