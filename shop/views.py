@@ -79,6 +79,11 @@ def product_list(request, category_slug=None):
                     products_heights.append(i.name)
         products = products.filter(name__in=products_heights)
 
+    search = request.GET.get('search_field')
+
+    if search:
+        products = products.filter(name__iregex=search)
+
     context = {
         'category': category,
         'categories': categories,
@@ -115,3 +120,8 @@ def product_detail(request, id, slug):
 def about_us(request):
     return render(request,
                   'shop/navigation/about.html')
+
+
+def contacts(request):
+    return render(request,
+                  'shop/navigation/contacts.html')

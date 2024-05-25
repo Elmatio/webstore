@@ -12,8 +12,6 @@ urlpatterns = [
          name='product_detail'),
     path('about/', views.about_us,
          name='about'),
-    # path('login/', LoginView.as_view(),
-    #      name='login'),
-    # path('logout/', LogoutView.as_view(),
-    #      name='logout'),
+    path('contacts/', views.contacts,
+         name='contacts')
 ]
