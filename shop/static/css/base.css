@@ -966,3 +966,15 @@ input::-webkit-inner-spin-button {
 ul {
     list-style-type: none;
 }
+
+.section-map__title {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 24px;
+}
+
+iframe {
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}

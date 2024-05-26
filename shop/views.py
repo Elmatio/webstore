@@ -13,7 +13,19 @@ def product_list(request, category_slug=None):
     categories = Category.objects.all()
     products = Product.objects.all()
 
-    if category_slug:
+    if category_slug == 'about':
+        return render(request,
+                      'shop/navigation/about.html')
+    elif category_slug == 'contacts':
+        return render(request,
+                      'shop/navigation/contacts.html')
+    elif category_slug == 'delivery':
+        return render(request,
+                      'shop/navigation/delivery.html')
+    elif category_slug == 'installment':
+        return render(request,
+                      'shop/navigation/installment.html')
+    elif category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
 
@@ -27,7 +39,6 @@ def product_list(request, category_slug=None):
     colors = request.GET.getlist('color[]')
     products_colors = []
     if colors:
-        print(1)
         for i in products:
             for j in colors:
                 if j.lower() in i.description.lower():
@@ -115,13 +126,3 @@ def product_detail(request, id, slug):
                   {'product': product,
                    'cart_product': cart_product,
                    'recommended_products': recommended_products})
-
-
-def about_us(request):
-    return render(request,
-                  'shop/navigation/about.html')
-
-
-def contacts(request):
-    return render(request,
-                  'shop/navigation/contacts.html')

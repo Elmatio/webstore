@@ -49,9 +49,9 @@
         </div>
         <div class="under-header">
             <div class="nav-div"><a class="link-nav" href="{% url 'shop:about' %}">О НАС</a></div>
-            <div class="nav-div"><a class="link-nav" href="#">ДОСТАВКА</a></div>
+            <div class="nav-div"><a class="link-nav" href="{% url 'shop:delivery' %}">ДОСТАВКА</a></div>
             <div class="nav-div"><a class="link-nav" href="{% url 'shop:contacts' %}">КОНТАКТЫ</a></div>
-            <div class="nav-div"><a class="link-nav" href="#">РАССРОЧКА</a></div>
+            <div class="nav-div"><a class="link-nav" href="{% url 'shop:installment' %}">РАССРОЧКА</a></div>
         </div>
         <div id="content">
             {% block content %}
