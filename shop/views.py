@@ -1,5 +1,8 @@
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+
+from reviews.models import Review
 from .models import Category, Product
 from cart.forms import AddProductForm
 from .recommender import Recommender
@@ -119,10 +122,13 @@ def product_detail(request, id, slug):
                                 slug=slug,
                                 available=True)
     cart_product = AddProductForm()
+
     r = Recommender()
     recommended_products = r.suggest_products_for([product], 4)
+    reviews = Review.objects.all()
     return render(request,
                   'shop/product/detail.html',
                   {'product': product,
                    'cart_product': cart_product,
-                   'recommended_products': recommended_products})
+                   'recommended_products': recommended_products,
+                   'reviews': reviews})

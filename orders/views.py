@@ -8,7 +8,6 @@ import weasyprint
 from .models import OrderItem, Order
 from .forms import OrderCreateForms
 from .tasks import order_created
-from cart.cart import CartClass
 from cart.models import Cart, CartItem
 
 

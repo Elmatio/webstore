@@ -1,29 +1,11 @@
-from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from shop.models import Product
-from .cart import CartClass
-from .forms import AddProductForm
 from coupons.forms import CouponApplyForm
 from shop.recommender import Recommender
 from django.http import JsonResponse
-from django.core.serializers import serialize
 from .models import CartItem, Cart
-from django.contrib.sessions.models import Session
 
-
-# @require_POST
-# def cart_add(request, product_id):
-#     cart = CartClass(request)
-#     product = get_object_or_404(Product, id=product_id)
-#     form = AddProductForm(request.POST)
-#     if form.is_valid():
-#         cd = form.cleaned_data
-#         cart.add(product=product,
-#                  quantity=cd['quantity'],
-#                  override_quantity=cd['override'])
-#     return redirect('cart:cart_detail')
 
 def cart_add(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -33,6 +15,7 @@ def cart_add(request, product_id):
     quantity = int(request.POST.get('quantity', 1))
     if not created:
         cart_item.quantity += quantity
+    print(cart_item)
     cart_item.save()
     return redirect('cart:cart_detail')
 

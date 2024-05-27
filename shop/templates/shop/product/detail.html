@@ -37,6 +37,20 @@
             </div>
         {% endif %}
     </div>
+    <h1>Написать отзыв</h1>
+    <form action="{% url 'reviews:reviews' product.id %}" method="POST">
+        {% csrf_token %}
+        <input type="text" placeholder="Напечатайте комментарий..." name="text">
+        <input type="submit" value="Сохранить комментарий">
+    </form>
+    <h1>Отзывы</h1>
+    {% for review in reviews %}
+        <div style="display: block; margin-bottom: 50px;">
+                <h3>{{review.user.name}}</h3>
+                <h3>{{review.user.last_name}}</h3>
+                <h2>{{review.text}}</h2>
+        </div>
+    {% endfor %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {

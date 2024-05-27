@@ -978,3 +978,13 @@ iframe {
     margin: 0 auto;
     padding-bottom: 20px;
 }
+
+.installment-img {
+    max-width: 400px;
+    max-height: 400px;
+    margin-right: 2%;
+}
+
+.installment-container {
+    display: flex;
+}
