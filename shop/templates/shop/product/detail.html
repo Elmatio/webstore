@@ -4,6 +4,7 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <div class="product-detail">
         <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
         <h1>{{ product.name }}</h1>
@@ -12,6 +13,8 @@
                 {{ product.category }}
             </a>
         </h2>
+        <h2>Оценка</h2>
+        <h2>{{ mark }}</h2>
         <p class="price">{{ product.price }} ₽</p>
         <form class="count-products-detail" action="{% url 'cart:cart_add' product.id %}" method="POST">
             {% csrf_token %}
@@ -36,21 +39,30 @@
                 {% endfor %}
             </div>
         {% endif %}
-    </div>
     <h1>Написать отзыв</h1>
     <form action="{% url 'reviews:reviews' product.id %}" method="POST">
         {% csrf_token %}
         <input type="text" placeholder="Напечатайте комментарий..." name="text">
+        <input type="text" placeholder="Оценка от 1 до 5" name="mark">
         <input type="submit" value="Сохранить комментарий">
     </form>
-    <h1>Отзывы</h1>
+    <a class="mark" href="#">☆</a>
+    <h1 style="margin-bottom: 50px;">Отзывы</h1>
     {% for review in reviews %}
-        <div style="display: block; margin-bottom: 50px;">
-                <h3>{{review.user.name}}</h3>
-                <h3>{{review.user.last_name}}</h3>
-                <h2>{{review.text}}</h2>
+        <div style="display: block; margin-bottom: 50px; width: 50%; border-radius:20px; background: #efefef;">
+            <div style="display: flex; flex-direction: column;">
+                <div>
+                    <h3>{{review.user.name}}</h3>
+                    <h3>{{review.user.last_name}}</h3>
+                    <h2>{{review.text}}</h2>
+                </div>
+                <div>
+                    <h2>{{ review.mark_stars }}</h2>
+                </div>
+            </div>
         </div>
     {% endfor %}
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {

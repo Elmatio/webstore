@@ -125,10 +125,16 @@ def product_detail(request, id, slug):
 
     r = Recommender()
     recommended_products = r.suggest_products_for([product], 4)
-    reviews = Review.objects.all()
+    reviews = Review.objects.filter(product__id=id)
+    if reviews.exists():
+        marks = reviews.values('mark')
+        mark = sum([i['mark'] for i in marks]) // marks.count() * '★'
+    else:
+        mark = 'Нет отзывов'
     return render(request,
                   'shop/product/detail.html',
                   {'product': product,
                    'cart_product': cart_product,
                    'recommended_products': recommended_products,
-                   'reviews': reviews})
+                   'reviews': reviews,
+                   'mark': mark})

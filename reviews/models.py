@@ -13,6 +13,8 @@ class Review(models.Model):
                                 verbose_name='product',
                                 on_delete=models.CASCADE)
     text = models.TextField('Комментарий', max_length=5000)
+    mark = models.IntegerField('Оценка')
+    mark_stars = models.CharField('Оценочные звёзды', max_length=5)
 
     def __str__(self):
         return f'{self.user.first_name} - {self.product}'

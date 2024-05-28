@@ -9,14 +9,16 @@ from shop.models import Product
 @login_required
 def review_add(request, id):
     review = []
-    print(id)
     product = get_object_or_404(Product, id=id)
     if request.method == 'POST':
         text = request.POST.get('text')
+        mark = int(request.POST.get('mark'))
+        mark_stars = mark * '★'
         review, created = Review.objects.get_or_create(user=request.user,
-                                              product=product,
-                                              text=text)
+                                                       product=product,
+                                                       text=text,
+                                                       mark=mark,
+                                                       mark_stars=mark_stars)
 
-        print(review)
         review.save()
     return redirect('shop:product_detail', product.id, product.slug)
