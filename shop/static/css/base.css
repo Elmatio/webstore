@@ -993,10 +993,17 @@ iframe {
   font-variation-settings:
   'FILL' 0,
   'wght' 400,
-  'GRAD' 0,
+  'GRAD' 0,1
   'opsz' 24
 }
 
+.mark {
+    font-size: 25px;
+    outline: none;
+    background: #fff;
+}
+
 .mark:hover {
-    color: yellow;
+    color: #343535;
+    cursor: pointer;
 }

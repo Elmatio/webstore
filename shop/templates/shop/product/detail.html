@@ -46,7 +46,13 @@
         <input type="text" placeholder="Оценка от 1 до 5" name="mark">
         <input type="submit" value="Сохранить комментарий">
     </form>
-    <a class="mark" href="#">☆</a>
+    <div>
+        <button class="mark" data-action="star1">☆</button>
+        <button class="mark" data-action="star2">☆</button>
+        <button class="mark" data-action="star3">☆</button>
+        <button class="mark" data-action="star4">☆</button>
+        <button class="mark" data-action="star5">☆</button>
+    </div>
     <h1 style="margin-bottom: 50px;">Отзывы</h1>
     {% for review in reviews %}
         <div style="display: block; margin-bottom: 50px; width: 50%; border-radius:20px; background: #efefef;">
@@ -83,6 +89,44 @@
 
             $(document).on('click', '.add_to_cart', function() {
                 alert('Товар успешно добавлен в корзину');
+            });
+        });
+        $(document).ready(function() {
+            $(document).on('click', '.mark', function() {
+                var row = $(this).closest('.product-detail');
+
+                var button = row.find('.mark');
+                var mark = 1;
+                var action = $(this).data('action');
+                console.log(action);
+                if (action === 'star1') {
+                    mark = 1;
+                }
+                if (action === 'star2') {
+                    mark = 2;
+                }
+                if (action === 'star3') {
+                    mark = 3;
+                }
+                if (action === 'star4') {
+                    mark = 4;
+                }
+                if (action === 'star5') {
+                    mark = 5;
+                }
+                console.log(mark);
+                $.ajax({
+                    url: "{% url 'reviews:reviews' product.id %}",
+                    method: 'POST',
+                    data: mark,
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response.message);
+                    },
+                    error: function(xhr, errmsg, err) {
+                        console.log('Ошибка: ', errmsg);
+                    }
+                });
             });
         });
     </script>

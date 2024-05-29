@@ -11,6 +11,10 @@ def review_add(request, id):
     review = []
     product = get_object_or_404(Product, id=id)
     if request.method == 'POST':
+        username = request.user.username
+        reviews = Review.objects.filter(user__username=username)
+        if reviews.exists():
+            reviews.delete()
         text = request.POST.get('text')
         mark = int(request.POST.get('mark'))
         mark_stars = mark * '★'
