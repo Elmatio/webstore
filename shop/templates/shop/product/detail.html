@@ -43,15 +43,15 @@
     <form action="{% url 'reviews:reviews' product.id %}" method="POST">
         {% csrf_token %}
         <input type="text" placeholder="Напечатайте комментарий..." name="text">
-        <input type="text" placeholder="Оценка от 1 до 5" name="mark">
+        <input type="hidden" name="mark" class="grade">
         <input type="submit" value="Сохранить комментарий">
     </form>
-    <div>
-        <button class="mark" data-action="star1">☆</button>
-        <button class="mark" data-action="star2">☆</button>
-        <button class="mark" data-action="star3">☆</button>
-        <button class="mark" data-action="star4">☆</button>
-        <button class="mark" data-action="star5">☆</button>
+    <div style="display: flex;">
+        <h2 id="s1" class="mark" data-action="star1">☆</h2>
+        <h2 id="s2" class="mark" data-action="star2">☆</h2>
+        <h2 id="s3" class="mark" data-action="star3">☆</h2>
+        <h2 id="s4" class="mark" data-action="star4">☆</h2>
+        <h2 id="s5" class="mark" data-action="star5">☆</h2>
     </div>
     <h1 style="margin-bottom: 50px;">Отзывы</h1>
     {% for review in reviews %}
@@ -91,42 +91,156 @@
                 alert('Товар успешно добавлен в корзину');
             });
         });
+        $(function () {
+            $("#s1").mouseover(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                s1.text('★');
+            });
+
+            $("#s1").mouseout(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                s1.text('☆');
+            });
+
+            $('#s2').mouseover(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                s1.text('★');
+                s2.text('★');
+            });
+            $("#s2").mouseout(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                s1.text('☆');
+                s2.text('☆');
+            });
+            $('#s3').mouseover(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                var s3 = row.find('#s3');
+                s1.text('★');
+                s2.text('★');
+                s3.text('★');
+            });
+            $("#s3").mouseout(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                var s3 = row.find('#s3');
+                s1.text('☆');
+                s2.text('☆');
+                s3.text('☆');
+            });
+            $('#s4').mouseover(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                var s3 = row.find('#s3');
+                var s4 = row.find('#s4');
+                s1.text('★');
+                s2.text('★');
+                s3.text('★');
+                s4.text('★');
+            });
+            $("#s4").mouseout(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                var s3 = row.find('#s3');
+                var s4 = row.find('#s4');
+                s1.text('☆');
+                s2.text('☆');
+                s3.text('☆');
+                s4.text('☆');
+            });
+            $('#s5').mouseover(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                var s3 = row.find('#s3');
+                var s4 = row.find('#s4');
+                var s5 = row.find('#s5');
+                s1.text('★');
+                s2.text('★');
+                s3.text('★');
+                s4.text('★');
+                s5.text('★');
+            });
+            $("#s5").mouseout(function(){
+                var row = $(this).closest('.product-detail');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                var s3 = row.find('#s3');
+                var s4 = row.find('#s4');
+                var s5 = row.find('#s5');
+                s1.text('☆');
+                s2.text('☆');
+                s3.text('☆');
+                s4.text('☆');
+                s5.text('☆');
+            });
+        });
         $(document).ready(function() {
             $(document).on('click', '.mark', function() {
                 var row = $(this).closest('.product-detail');
 
                 var button = row.find('.mark');
+                var s1 = row.find('#s1');
+                var s2 = row.find('#s2');
+                var s3 = row.find('#s3');
+                var s4 = row.find('#s4');
+                var s5 = row.find('#s5');
                 var mark = 1;
                 var action = $(this).data('action');
                 console.log(action);
                 if (action === 'star1') {
                     mark = 1;
+                    s1.text('★');
+                    s2.text('☆');
+                    s3.text('☆');
+                    s4.text('☆');
+                    s5.text('☆');
                 }
                 if (action === 'star2') {
                     mark = 2;
+                    s1.text('★');
+                    s2.text('★');
+                    s3.text('☆');
+                    s4.text('☆');
+                    s5.text('☆');
                 }
                 if (action === 'star3') {
                     mark = 3;
+                    s1.text('★');
+                    s2.text('★');
+                    s3.text('★');
+                    s4.text('☆');
+                    s5.text('☆');
                 }
                 if (action === 'star4') {
                     mark = 4;
+                    s1.text('★');
+                    s2.text('★');
+                    s3.text('★');
+                    s4.text('★');
+                    s5.text('☆');
                 }
                 if (action === 'star5') {
                     mark = 5;
+                    s1.text('★');
+                    s2.text('★');
+                    s3.text('★');
+                    s4.text('★');
+                    s5.text('★');
                 }
+                var mark_html = row.find('.grade');
+                mark_html.val(mark);
                 console.log(mark);
-                $.ajax({
-                    url: "{% url 'reviews:reviews' product.id %}",
-                    method: 'POST',
-                    data: mark,
-                    dataType: 'json',
-                    success: function(response) {
-                        console.log(response.message);
-                    },
-                    error: function(xhr, errmsg, err) {
-                        console.log('Ошибка: ', errmsg);
-                    }
-                });
             });
         });
     </script>
