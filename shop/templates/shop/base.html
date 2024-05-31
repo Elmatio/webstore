@@ -52,6 +52,9 @@
             <div class="nav-div"><a class="link-nav" href="{% url 'shop:delivery' %}">ДОСТАВКА</a></div>
             <div class="nav-div"><a class="link-nav" href="{% url 'shop:contacts' %}">КОНТАКТЫ</a></div>
             <div class="nav-div"><a class="link-nav" href="{% url 'shop:installment' %}">РАССРОЧКА</a></div>
+            {% if request.user.username == 'ahmat' %}
+                <div class="nav-div"><a class="link-nav" href="{% url 'chat:chat_list' %}">ЧАТ</a></div>
+            {% endif %}
         </div>
         <div id="content">
             {% block content %}

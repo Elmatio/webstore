@@ -10,4 +10,23 @@
         Адрес: г. Владикавказ, Московская улица 3<br>
         График работы: ПН-СБ 09:00 - 19:00, ВС 10:00 - 19:00<br>
     </h2>
+    <div>
+        <p>Вы также можете обратиться к администратору с помощью представленного ниже окна.</p>
+        {% if request.user.is_authenticated and request.user.username != 'ahmat' %}
+        <div style="display:flex;">
+            <p>{{ user.lastname }}</p>
+            <p>{{ user.firstname }}</p>
+        </div>
+        <form action="{% url 'chat:message' %}" method="post">
+            {% csrf_token %}
+            <p>Введите сообщение:</p>
+            <input class="text" type="text" placeholder="Текст..." name="message">
+            <input type="submit" value="Отправить сообщение">
+        </form>
+        {% elif request.user.username == 'ahmat' %}
+            <h2>Вы не можете отправить сообщение самому себе</h2>
+        {% else %}
+            <h2>Для отправки сообщения администратору сначала авторизуйтесь</h2>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -29,6 +29,7 @@ urlpatterns = [
     path('coupons/', include('coupons.urls', namespace='coupons')),
     path('account/', include('account.urls', namespace='account')),
     path('reviews/', include('reviews.urls', namespace='reviews')),
+    path('chat/', include('chat.urls', namespace='chat')),
     path('', include('shop.urls', namespace='shop')),
 ]
 
