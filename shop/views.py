@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
+from account.models import CustomUser
+from chat.models import Message
 from reviews.models import Review
 from .models import Category, Product
 from cart.forms import AddProductForm
@@ -20,8 +22,35 @@ def product_list(request, category_slug=None):
         return render(request,
                       'shop/navigation/about.html')
     elif category_slug == 'contacts':
+        user = request.user
+        messages_user = Message.objects.filter(user__id=user.id)
+        admin = CustomUser.objects.get(username='ahmat')
+        messages_admin = Message.objects.filter(user=admin, user_to=user)
+        message = admin
+        messages = []
+        l_user = [i for i in messages_user]
+        l_admin = [i for i in messages_admin]
+        print(l_user, l_admin)
+        while l_user and l_admin:
+            if l_user[0].date < l_admin[0].date:
+                messages.append(l_user[0])
+                del l_user[0]
+            elif l_user[0].date == l_admin[0].date:
+                if l_user[0].time < l_admin[0].time:
+                    messages.append(l_user[0])
+                    del l_user[0]
+                else:
+                    messages.append(l_admin[0])
+                    del l_admin[0]
+            else:
+                messages.append(l_admin[0])
+                del l_admin[0]
+        messages.extend(l_user)
+        messages.extend(l_admin)
         return render(request,
-                      'shop/navigation/contacts.html')
+                      'shop/navigation/contacts.html',
+                      {'messages': messages,
+                       'message': message})
     elif category_slug == 'delivery':
         return render(request,
                       'shop/navigation/delivery.html')

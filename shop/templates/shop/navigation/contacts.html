@@ -17,7 +17,18 @@
             <p>{{ user.lastname }}</p>
             <p>{{ user.firstname }}</p>
         </div>
-        <form action="{% url 'chat:message' %}" method="post">
+        <h1>
+            Чат c {{ message.last_name }}
+            {{ message.first_name }}
+        </h1>
+        {% for m in messages %}
+            {% if m.user.username == 'ahmat' %}
+                <h2 style="background: #efefef; border-radius: 20px; width:40%; height:100px;">{{m.text}} {{m.time}}</h2>
+            {% else %}
+                <h2 style="background: orange; border-radius: 20px; width: 40%; height:100px;">{{ m.text }} {{ m.time }}</h2>
+            {% endif %}
+        {% endfor %}
+        <form action="{% url 'chat:message' request.user.id %}" method="post">
             {% csrf_token %}
             <p>Введите сообщение:</p>
             <input class="text" type="text" placeholder="Текст..." name="message">

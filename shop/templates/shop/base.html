@@ -7,7 +7,7 @@
         <title>{% block title %}СОМ{% endblock %}</title>
         <link href="{% static 'css/base.css' %}" rel="stylesheet">
     </head>
-    <body>
+    <body style="position: relative;">
         <div class="header">
             <div class="logo"><a href="/"><img class="logo_img" src='{% static "img/result.png" %}'></a></div>
             <div class="container">
@@ -60,5 +60,6 @@
             {% block content %}
             {% endblock %}
         </div>
+        <div style="background: red; width:100px; height:100px; margin-left: -20px; margin-top: 100px; position: absolute;"></div>
     </body>
 </html>

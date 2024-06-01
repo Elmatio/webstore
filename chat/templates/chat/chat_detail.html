@@ -1,0 +1,24 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Чат{% endblock %}
+
+{% block content %}
+    <h1>
+        Чат c {{ message.user.last_name }}
+        {{ message.user.first_name }}
+        ({{ message.user.username }})
+    </h1>
+    {% for m in messages %}
+        {% if m.user.username == 'ahmat' %}
+            <h2 style="background: orange; border-radius: 20px; width:40%; height:100px;">{{m.text}} {{m.time}}</h2>
+        {% else %}
+            <h2 style="background: #efefef; border-radius: 20px; width: 40%; height:100px;">{{ m.text }} {{ m.time }}</h2>
+        {% endif %}
+    {% endfor %}
+    <form action="{% url 'chat:message' message.user.id %}" method="post">
+        {% csrf_token %}
+        <p>Введите сообщение:</p>
+        <input class="text" type="text" placeholder="Текст..." name="message">
+        <input type="submit" value="Отправить сообщение">
+    </form>
+{% endblock %}
