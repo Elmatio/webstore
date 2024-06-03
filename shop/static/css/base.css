@@ -1012,3 +1012,69 @@ iframe {
     width: 30%;
 }
 
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 99998;
+    background-color: rgba(0, 0, 0, .4);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .4s, visibility .4s;
+}
+
+.modal__box {
+    max-width: 1000px;
+    padding: 45px;
+    z-index: 1;
+    background-color: white;
+    margin: 30px 15px;
+    box-shadow: 0px 0px 17px -7px rgba(34,60, 80, 0.2);
+    transform: scale(0);
+    transition: transform .8s;
+    border-radius: 20px;
+}
+
+.modal.open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal.open .modal__box {
+    transform: scale(1);
+}
+
+
+.modal__box-btn {
+    position: absolute;
+    top: 8px;
+    right: 20px;
+    border: none;
+    background-color: transparent;
+    padding: 5px;
+}
+
+.modal__box-btn svg path {
+    transition: fill .4s;
+}
+
+.modal__box-btn:hover svg path {
+    fill: #F77B07;
+    cursor: pointer;
+}
+
+.open-modal-btn {
+    background: #F77B07;
+    width: 75px;
+    height:75px;
+    margin-top: 33%;
+    position: fixed;
+    border-radius: 20px;
+    border: none;
+}

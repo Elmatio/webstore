@@ -22,35 +22,8 @@ def product_list(request, category_slug=None):
         return render(request,
                       'shop/navigation/about.html')
     elif category_slug == 'contacts':
-        user = request.user
-        messages_user = Message.objects.filter(user__id=user.id)
-        admin = CustomUser.objects.get(username='ahmat')
-        messages_admin = Message.objects.filter(user=admin, user_to=user)
-        message = admin
-        messages = []
-        l_user = [i for i in messages_user]
-        l_admin = [i for i in messages_admin]
-        print(l_user, l_admin)
-        while l_user and l_admin:
-            if l_user[0].date < l_admin[0].date:
-                messages.append(l_user[0])
-                del l_user[0]
-            elif l_user[0].date == l_admin[0].date:
-                if l_user[0].time < l_admin[0].time:
-                    messages.append(l_user[0])
-                    del l_user[0]
-                else:
-                    messages.append(l_admin[0])
-                    del l_admin[0]
-            else:
-                messages.append(l_admin[0])
-                del l_admin[0]
-        messages.extend(l_user)
-        messages.extend(l_admin)
         return render(request,
-                      'shop/navigation/contacts.html',
-                      {'messages': messages,
-                       'message': message})
+                      'shop/navigation/contacts.html')
     elif category_slug == 'delivery':
         return render(request,
                       'shop/navigation/delivery.html')
@@ -126,6 +99,34 @@ def product_list(request, category_slug=None):
 
     if search:
         products = products.filter(name__iregex=search)
+    messages = []
+    message = []
+    if request.user.is_authenticated:
+        user = request.user
+        messages_user = Message.objects.filter(user__id=user.id)
+        admin = CustomUser.objects.get(username='ahmat')
+        messages_admin = Message.objects.filter(user=admin, user_to=user)
+        message = admin
+        messages = []
+        l_user = [i for i in messages_user]
+        l_admin = [i for i in messages_admin]
+        print(l_user, l_admin)
+        while l_user and l_admin:
+            if l_user[0].date < l_admin[0].date:
+                messages.append(l_user[0])
+                del l_user[0]
+            elif l_user[0].date == l_admin[0].date:
+                if l_user[0].time < l_admin[0].time:
+                    messages.append(l_user[0])
+                    del l_user[0]
+                else:
+                    messages.append(l_admin[0])
+                    del l_admin[0]
+            else:
+                messages.append(l_admin[0])
+                del l_admin[0]
+        messages.extend(l_user)
+        messages.extend(l_admin)
 
     context = {
         'category': category,
@@ -137,8 +138,9 @@ def product_list(request, category_slug=None):
         'lengths': lengths_list,
         'widths': widths_list,
         'heights': heights_list,
+        'messages': messages,
+        'message': message,
     }
-
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return render(request, 'shop/product/list_partial.html', context)
 

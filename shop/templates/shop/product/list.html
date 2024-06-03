@@ -18,7 +18,6 @@
                 </li>
             {% endfor %}
         </ul>
-
         <!-- Фильтр по цене -->
         <div class="wrapper">
             <header>
@@ -131,51 +130,108 @@
             {% include 'shop/product/list_partial.html' %}
         </div>
     </div>
-
+    <div class="modal" id="modal">
+            <div class="modal__box">
+                <button class="modal__box-btn" id="close-modal-btn">
+                    <svg width="23" height="25" viewBox="0 0 23 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.09082 0.03125L22.9999 22.0294L20.909 24.2292L-8.73579e-05 2.23106L2.09082 0.03125Z"
+                            fill="#333333" />
+                        <path d="M0 22.0295L20.9091 0.314368L23 2.23125L2.09091 24.2294L0 22.0295Z" fill="#333333" />
+                    </svg>
+                </button>
+                <h2>Чат с технической поддержкой "СОМ"</h2>
+                    {% if user.is_authenticated %}
+                        <p>Вы также можете обратиться к администратору с помощью представленного ниже окна.</p>
+                        {% if request.user.is_authenticated and request.user.username != 'ahmat' %}
+                        <div style="display:flex;">
+                            <p>{{ user.lastname }}</p>
+                            <p>{{ user.firstname }}</p>
+                        </div>
+                        <h1>
+                            Чат c {{ message.last_name }}
+                            {{ message.first_name }}
+                        </h1>
+                        {% for m in messages %}
+                            {% if m.user.username == 'ahmat' %}
+                                <h2 style="background: #efefef; border-radius: 20px; width:40%; height:100px;">{{m.text}} {{m.time}}</h2>
+                            {% else %}
+                                <h2 style="background: orange; border-radius: 20px; width: 40%; height:100px;">{{ m.text }} {{ m.time }}</h2>
+                            {% endif %}
+                        {% endfor %}
+                        <form action="{% url 'chat:message' request.user.id %}" method="post">
+                            {% csrf_token %}
+                            <p>Введите сообщение:</p>
+                            <input class="text" type="text" placeholder="Текст..." name="message">
+                            <input type="submit" value="Отправить сообщение">
+                        </form>
+                        {% elif request.user.username == 'ahmat' %}
+                            <h2>Вы не можете отправить сообщение самому себе</h2>
+                        {% else %}
+                            <h2>Для отправки сообщения администратору сначала авторизуйтесь</h2>
+                        {% endif %}
+                    {% endif %}
+            </div>
+        </div>
+    <button id="open-modal-btn" class="open-modal-btn"></button>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-function updateProductList() {
-    let filters = {
-        min_price: $('.input-min').val(),
-        max_price: $('.input-max').val(),
-        color: [],
-        manufacturer: [],
-        material: [],
-        length: [],
-        width: [],
-        height: []
-    };
+        document.getElementById("open-modal-btn").addEventListener("click", function() {
+            document.getElementById("modal").classList.add("open");
+        });
 
-    $('.filter-checkbox:checked').each(function() {
-        let name = $(this).attr('name');
-        let value = $(this).val();
-        console.log("Name:", name, "Value:", value); // Отладочный вывод
-        if (name.endsWith('[]')) {
-            name = name.slice(0, -2); // Убираем квадратные скобки из имени
-            if (filters[name] === undefined) {
-                filters[name] = []; // Проверяем, существует ли массив, если нет, создаем его
+        document.getElementById("close-modal-btn").addEventListener("click", function() {
+            document.getElementById("modal").classList.remove("open");
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('modal').classList.remove('open');
             }
-            filters[name].push(value);
-        } else {
-            filters[name] = value;
+        });
+
+        document.querySelector('#modal .modal__box').addEventListener('click', event => {
+            event.is_ClickWithInModal = true;
+        });
+
+        function updateProductList() {
+            let filters = {
+                min_price: $('.input-min').val(),
+                max_price: $('.input-max').val(),
+                color: [],
+                manufacturer: [],
+                material: [],
+                length: [],
+                width: [],
+                height: []
+            };
+
+            $('.filter-checkbox:checked').each(function() {
+                let name = $(this).attr('name');
+                let value = $(this).val();
+                console.log("Name:", name, "Value:", value); // Отладочный вывод
+                if (name.endsWith('[]')) {
+                    name = name.slice(0, -2); // Убираем квадратные скобки из имени
+                    if (filters[name] === undefined) {
+                        filters[name] = []; // Проверяем, существует ли массив, если нет, создаем его
+                    }
+                    filters[name].push(value);
+                } else {
+                    filters[name] = value;
+                }
+            });
+
+            $.ajax({
+                url: '',
+                type: 'GET',
+                data: filters,
+                success: function(data) {
+                    $('#product-container').html(data);
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
+                }
+            });
         }
-    });
-
-    $.ajax({
-        url: '',
-        type: 'GET',
-        data: filters,
-        success: function(data) {
-            $('#product-container').html(data);
-        },
-        error: function(xhr, errmsg, err) {
-            console.log(xhr.status + ": " + xhr.responseText);
-        }
-    });
-}
-
-
-
 
         function initializeSlider() {
             let minVal = parseInt($('.input-min').val()),
@@ -222,21 +278,19 @@ function updateProductList() {
         $(document).ready(function() {
             initializeSlider();
         });
-$('.filter-checkbox:checked').each(function() {
-    let name = $(this).attr('name');
-    let value = $(this).val();
-    console.log("Name:", name, "Value:", value); // Отладочный вывод
-    if (name.slice(-2) === '[]') {
-        name = name.slice(0, -2); // Удалить квадратные скобки
-        if (!filters[name]) {
-            filters[name] = []; // Создать массив, если он не существует
-        }
-        filters[name].push(value);
-    } else {
-        filters[name] = value; // Просто установить значение, если это не массив
-    }
-});
-
-
+        $('.filter-checkbox:checked').each(function() {
+            let name = $(this).attr('name');
+            let value = $(this).val();
+            console.log("Name:", name, "Value:", value); // Отладочный вывод
+            if (name.slice(-2) === '[]') {
+                name = name.slice(0, -2); // Удалить квадратные скобки
+                if (!filters[name]) {
+                    filters[name] = []; // Создать массив, если он не существует
+                }
+                filters[name].push(value);
+            } else {
+                filters[name] = value; // Просто установить значение, если это не массив
+            }
+        });
     </script>
 {% endblock %}
