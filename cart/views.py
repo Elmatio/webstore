@@ -15,7 +15,6 @@ def cart_add(request, product_id):
     quantity = int(request.POST.get('quantity', 1))
     if not created:
         cart_item.quantity += quantity
-    print(cart_item)
     cart_item.save()
     return redirect('cart:cart_detail')
 

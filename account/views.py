@@ -6,7 +6,7 @@ from django.views.generic import CreateView
 from .forms import LoginForm, RegistrationForm, UserEditForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-
+from orders.models import Order
 from .models import CustomUser
 
 

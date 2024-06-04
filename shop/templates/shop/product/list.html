@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="sidebar-custom" style="z-index: 2;">
+<div id="sidebar-custom" style="z-index: 2;" xmlns="http://www.w3.org/1999/html">
         <h3 style="color: #111111;">Каталог</h3>
         <ul>
             <li {% if not category %}class="selected"{% endif %}>
@@ -141,31 +141,43 @@
                 </button>
                 <h2>Чат с технической поддержкой "СОМ"</h2>
                     {% if user.is_authenticated %}
-                        <p>Вы также можете обратиться к администратору с помощью представленного ниже окна.</p>
                         {% if request.user.is_authenticated and request.user.username != 'ahmat' %}
-                        <div style="display:flex;">
-                            <p>{{ user.lastname }}</p>
-                            <p>{{ user.firstname }}</p>
-                        </div>
-                        <h1>
-                            Чат c {{ message.last_name }}
-                            {{ message.first_name }}
-                        </h1>
-                        {% for m in messages %}
-                            {% if m.user.username == 'ahmat' %}
-                                <h2 style="background: #efefef; border-radius: 20px; width:40%; height:100px;">{{m.text}} {{m.time}}</h2>
-                            {% else %}
-                                <h2 style="background: orange; border-radius: 20px; width: 40%; height:100px;">{{ m.text }} {{ m.time }}</h2>
-                            {% endif %}
-                        {% endfor %}
-                        <form action="{% url 'chat:message' request.user.id %}" method="post">
-                            {% csrf_token %}
-                            <p>Введите сообщение:</p>
-                            <input class="text" type="text" placeholder="Текст..." name="message">
-                            <input type="submit" value="Отправить сообщение">
-                        </form>
+                            <div style="display:flex;">
+                                <p>{{ user.lastname }}</p>
+                                <p>{{ user.firstname }}</p>
+                            </div>
+                            <div style="position: sticky; background-color: #fff; z-index: 1; top: 0;">
+                                <h1>
+                                    Чат c {{ message.last_name }}
+                                    {{ message.first_name }}
+                                </h1>
+                            </div>
+                            {% for m in messages %}
+                                {% if m.user.username == 'ahmat' %}
+                                    <h2 style="background: #efefef; border-radius: 20px; width:40%; height:100px;">{{m.text}} {{m.time}}</h2>
+                                {% else %}
+                                    <h2 style="background: orange; border-radius: 20px; width: 40%; height:100px;">{{ m.text }} {{ m.time }}</h2>
+                                {% endif %}
+                            {% endfor %}
+                            <form class="chat-form" action="{% url 'chat:message' request.user.id %}" method="post">
+                                {% csrf_token %}
+                                <p>Введите сообщение:</p>
+                                <input class="text" type="text" placeholder="Текст..." name="message">
+                                <button class="beauty-button" type="submit">Отправить сообщение</button>
+                            </form>
                         {% elif request.user.username == 'ahmat' %}
-                            <h2>Вы не можете отправить сообщение самому себе</h2>
+                            <h2>Сообщения</h2>
+                            {% for message in messages %}
+                                <a href="{% url 'chat:chat_detail' message.id %}">
+                                <div style="background: #efefef; width: 30%; max-height: 200px; min-height: 60px; border-radius: 40px; padding-left: 2%;">
+                                    <div style="display: flex;">
+                                        <h3 style="padding-right: 1%;">{{ message.user.last_name }}</h3>
+                                        <h3>{{ message.user.first_name }}</h3>
+                                    </div>
+                                    <h3>{{ message.text }}</h3>
+                                </div>
+                                </a>
+                            {% endfor %}
                         {% else %}
                             <h2>Для отправки сообщения администратору сначала авторизуйтесь</h2>
                         {% endif %}
@@ -292,5 +304,38 @@
                 filters[name] = value; // Просто установить значение, если это не массив
             }
         });
+        $(document).ready(function() {
+            $(document).on('submit', '.chat-form', function(event) {
+                event.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    success: function(response) {
+                        console.log('Сообщение отправлено');
+                    },
+                    error: function(xhr, errmsg, err) {
+                        console.log(xhr.status + ": " + xhr.responseText);
+                    }
+                });
+            });
+        });
+        var timer;
+        var isPaused = false;
+
+        $(window).on('wheel', function(){
+            isPaused = true;
+            clearTimeout(timer);
+            timer = window.setTimeout(function(){
+                isPaused = false;
+            }, 1000);
+        });
+
+        window.setInterval(function(){
+            if(!isPaused){
+                $("#modal").scrollTop($("#modal")[0].scrollHeight);
+            }
+        }, 500);
     </script>
 {% endblock %}

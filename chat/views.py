@@ -37,7 +37,6 @@ def chat_detail(request, id):
     messages = []
     l_user = [i for i in messages_user]
     l_admin = [i for i in messages_admin]
-    print(l_user, l_admin)
     while l_user and l_admin:
         if l_user[0].date < l_admin[0].date:
             messages.append(l_user[0])
