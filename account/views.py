@@ -3,10 +3,11 @@ from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.views.generic import CreateView
 
+from shop.models import Product
 from .forms import LoginForm, RegistrationForm, UserEditForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-from orders.models import Order
+from orders.models import Order, OrderItem
 from .models import CustomUser
 
 
@@ -56,11 +57,14 @@ def register(request):
 
 @login_required
 def profile(request, user_id):
+    orders = Order.objects.filter(user=request.user)
+    order_items = [OrderItem.objects.filter(order=order) for order in orders]
+    products = [item.product for orders in order_items for item in orders]
     user = user_id
     profile = CustomUser.objects.get(id=user)
     return render(request,
                   'account/profile.html',
-                  {'profile': profile})
+                  {'profile': profile, 'products': products})
 
 
 @login_required

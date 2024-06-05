@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
@@ -11,43 +12,39 @@ from .tasks import order_created
 from cart.models import Cart, CartItem
 
 
+@login_required
 def order_create(request):
-    session_key = request.session.session_key
-    # Finding the cart by ID session
-    cart = Cart.objects.get(session_key=session_key)
+    user = request.user
+    cart = Cart.objects.get(user=user)
     cart_item = cart.cart.all()
     cart_item_copy = CartItem()
     discount = None
     coupon = cart_item_copy.coupon(request.session.get('coupon_id'))
     total_price = cart_item_copy.get_total_price()
     if request.method == 'POST':
-        form = OrderCreateForms(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
-            if coupon:
-                discount = cart_item_copy.get_discount(coupon)
-                order.coupon = coupon
-                order.discount = discount
-                total_price -= discount
-            order.save()
-            for item in cart_item:
-                OrderItem.objects.create(order=order,
-                                        product=item.product,
-                                        price=item.product.price,
-                                        quantity=item.quantity)
-            # clear the cart
-            CartItem.objects.all().delete()
-            # launch asynchronous task
-            order_created.delay(order.id)
-            # set the order in the session
-            request.session['order_id'] = order.id
-            # redirect for payment
-            return redirect(reverse('payment:process'))
-    else:
-        form = OrderCreateForms()
+        order = Order.objects.create(user=user)
+        if coupon:
+            discount = cart_item_copy.get_discount(coupon)
+            order.coupon = coupon
+            order.discount = discount
+            total_price -= discount
+        order.save()
+        for item in cart_item:
+            OrderItem.objects.create(order=order,
+                                     product=item.product,
+                                     price=item.product.price,
+                                     quantity=item.quantity)
+        # clear the cart
+        CartItem.objects.all().delete()
+        # launch asynchronous task
+        order_created.delay(order.id)
+        # set the order in the session
+        request.session['order_id'] = order.id
+        # redirect for payment
+        return redirect(reverse('payment:process'))
     return render(request,
                   'orders/order/create.html',
-                  {'cart_item': cart_item, 'form': form,
+                  {'cart_item': cart_item,
                    'coupon': coupon, 'discount': discount,
                    'total_price': total_price})
 

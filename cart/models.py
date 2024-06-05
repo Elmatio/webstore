@@ -3,14 +3,19 @@ from shop.models import Product
 from django.conf import settings
 from coupons.models import Coupon
 from decimal import Decimal
+from account.models import CustomUser
 
 
 class Cart(models.Model):
-    id_cart = models.PositiveIntegerField(default=1)
+    user = models.ForeignKey(CustomUser,
+                             related_name='user',
+                             blank=True,
+                             null=True,
+                             on_delete=models.CASCADE)
     products = models.ManyToManyField(Product,
                                       through='CartItem')
     session = models.CharField(max_length=255, null=True, blank=True)
-    session_key = models.CharField(max_length=100, unique=True)
+    session_key = models.CharField(max_length=100, unique=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -18,7 +23,7 @@ class Cart(models.Model):
         ordering = ['-created']
 
     def __str__(self):
-        return f'{self.id_cart}'
+        return f'{self.id}'
 
 
 class CartItem(models.Model):

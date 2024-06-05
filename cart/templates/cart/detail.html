@@ -11,7 +11,7 @@
         <div class="sidebar" style="border-radius: 42px;">
             <div style="width: 20%; height: 21%; background: #fff; display: block; position: absolute; padding-left: 1%; padding-top: 1%; padding-right: 1%; border-radius: 20px;">
                 <a href='#' class="address">Выбрать адрес доставки</a>
-                <p style="margin-top: 10%;" class="total-count">Товары, {{ cart_item_copy.get_total_count }} шт.</p>
+                <p style="margin-top: 10%;" class="total-count">Товары, {{ total_count }} шт.</p>
                 <div style="display:flex; justify-content: space-between;">
                     <h2 style="flex: 1 0;">Итого: </h2>
                     <h2 class="total-price" style="flex: 0 1; white-space: nowrap;">{{ total_price }} ₽</h2>
@@ -69,7 +69,7 @@
                             <td>Промежуточный итог</td>
                             <td colspan="4"></td>
                             <td class="num">
-                                <p class="subtotal-price">{{ cart_item_copy.get_total_price }} ₽</p>
+                                <p class="subtotal-price">{{ subtotal_price }} ₽</p>
                             </td>
                         </tr>
                         <tr>
@@ -92,7 +92,7 @@
             </table>
         </div>
         <p style="margin-left: 10%; margin-top: 50px;">Воспользуйтесь купоном:</p>
-        <form action="{% url 'coupons:apply' %}" method="post" style="margin-left: 10%;">
+        <form action="{% url 'coupons:apply' %}" method="post" style="margin-left: 10%;" name="coupon">
             {{ coupon_apply_form }}
             <input type="submit" value="Подтвердить">
             {% csrf_token %}

@@ -4,11 +4,15 @@ from django.conf import settings
 from django.core.validators import MinValueValidator, \
     MaxValueValidator
 from coupons.models import Coupon
+from account.models import CustomUser
 
 
 # Create your models here.
 class Order(models.Model):
     stripe_id = models.CharField(max_length=250, blank=True)
+    user = models.ForeignKey(CustomUser,
+                             related_name='user_order',
+                             on_delete=models.CASCADE)
     coupon = models.ForeignKey(Coupon,
                                related_name='orders',
                                null=True,
@@ -17,12 +21,6 @@ class Order(models.Model):
     discount = models.IntegerField(default=0,
                                    validators=[MinValueValidator(0),
                                                MaxValueValidator(100)])
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField()
-    address = models.CharField(max_length=250)
-    postal_code = models.CharField(max_length=20)
-    city = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)

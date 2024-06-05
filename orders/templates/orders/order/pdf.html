@@ -9,10 +9,9 @@
   </p>
   <h3>Описание счёта</h3>
   <p>
-    {{ order.first_name }} {{ order.last_name }}<br>
-    {{ order.email }}<br>
-    {{ order.address }}<br>
-    {{ order.postal_code }}, {{ order.city }}
+    {{ order.user.first_name }} {{ order.user.last_name }} {{ order.user.middle_name }}<br>
+    {{ order.user.email }}<br>
+    {{ order.user.address }}
   </p>
   <h3>Товаров куплено</h3>
   <table>
