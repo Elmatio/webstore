@@ -1,11 +1,13 @@
 {% load static %}
 
 {% for product in filter %}
-    <div class="item product-card" style="padding-bottom: 0;">
-        <a href="{{ product.get_absolute_url }}">
-            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" style="max-width: 100%; max-height: 200px; width: auto; !important">
-        </a>
-        <div class="product-info" style="text-align: center; position: relative; height: 100px; ">
+    <div class="item product-card" style="padding-bottom: 0; width: 20vw;">
+        <div style="width: 100%; height: 40%; overflow: hidden">
+            <a href="{{ product.get_absolute_url }}">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" style="width: auto; height: auto; max-width:15vw; max-height: 10vw; !important">
+            </a>
+        </div>
+        <div class="product-info" style="text-align: center; height: 100px;">
             <a class="product-name" href="{{ product.get_absolute_url }}">{{ product.name }}</a>
             <p class="product-price">{{ product.price }} ₽</p>
             <div class="product-hover">
