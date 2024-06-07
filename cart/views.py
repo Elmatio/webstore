@@ -21,6 +21,8 @@ def cart_add(request, product_id):
     quantity = int(request.POST.get('quantity', 1))
     if not created:
         cart_item.quantity += quantity
+    else:
+        cart_item.quantity = quantity
     cart_item.save()
     return redirect('cart:cart_detail')
 
@@ -40,7 +42,6 @@ def cart_detail(request):
         session_key = request.session.session_key
         cart = Cart.objects.get(session_key=session_key)
     cart_item = cart.cart.all()
-    print(cart_item)
     coupon_apply_form = CouponApplyForm()
     #Нахождение всех товаров в корзине
     cart_products = [item.product for item in cart_item]

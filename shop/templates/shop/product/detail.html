@@ -70,12 +70,11 @@
     {% endfor %}
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+<script>
         $(document).ready(function() {
+            // Изменение количества товаров
             $(document).on('click', '.change-count', function() {
-                var row = $(this).closest('.product-detail');
-
-                var quantityElement = row.find('.quantity-input');
+                var quantityElement = $(this).closest('.product-detail').find('.quantity-input');
                 var currentQuantity = parseInt(quantityElement.val());
                 var action = $(this).data('action');
                 if (action === 'plus') {
@@ -83,165 +82,40 @@
                 } else if (action === 'minus' && currentQuantity > 1) {
                     currentQuantity--;
                 }
-
                 quantityElement.val(currentQuantity);
             });
 
-            $(document).on('click', '.add_to_cart', function() {
-                alert('Товар успешно добавлен в корзину');
-            });
-        });
-        $(function () {
-            $("#s1").mouseover(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                s1.text('★');
-            });
+            // Оповещение об успешном добавлении товара в корзину
 
-            $("#s1").mouseout(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                s1.text('☆');
-            });
-
-            $('#s2').mouseover(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                s1.text('★');
-                s2.text('★');
-            });
-            $("#s2").mouseout(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                s1.text('☆');
-                s2.text('☆');
-            });
-            $('#s3').mouseover(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                var s3 = row.find('#s3');
-                s1.text('★');
-                s2.text('★');
-                s3.text('★');
-            });
-            $("#s3").mouseout(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                var s3 = row.find('#s3');
-                s1.text('☆');
-                s2.text('☆');
-                s3.text('☆');
-            });
-            $('#s4').mouseover(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                var s3 = row.find('#s3');
-                var s4 = row.find('#s4');
-                s1.text('★');
-                s2.text('★');
-                s3.text('★');
-                s4.text('★');
-            });
-            $("#s4").mouseout(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                var s3 = row.find('#s3');
-                var s4 = row.find('#s4');
-                s1.text('☆');
-                s2.text('☆');
-                s3.text('☆');
-                s4.text('☆');
-            });
-            $('#s5').mouseover(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                var s3 = row.find('#s3');
-                var s4 = row.find('#s4');
-                var s5 = row.find('#s5');
-                s1.text('★');
-                s2.text('★');
-                s3.text('★');
-                s4.text('★');
-                s5.text('★');
-            });
-            $("#s5").mouseout(function(){
-                var row = $(this).closest('.product-detail');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                var s3 = row.find('#s3');
-                var s4 = row.find('#s4');
-                var s5 = row.find('#s5');
-                s1.text('☆');
-                s2.text('☆');
-                s3.text('☆');
-                s4.text('☆');
-                s5.text('☆');
-            });
         });
         $(document).ready(function() {
-            $(document).on('click', '.mark', function() {
-                var row = $(this).closest('.product-detail');
+        var stars = [$('#s1'), $('#s2'), $('#s3'), $('#s4'), $('#s5')];
+        var currentRating = 0; // Текущая оценка
 
-                var button = row.find('.mark');
-                var s1 = row.find('#s1');
-                var s2 = row.find('#s2');
-                var s3 = row.find('#s3');
-                var s4 = row.find('#s4');
-                var s5 = row.find('#s5');
-                var mark = 1;
-                var action = $(this).data('action');
-                console.log(action);
-                if (action === 'star1') {
-                    mark = 1;
-                    s1.text('★');
-                    s2.text('☆');
-                    s3.text('☆');
-                    s4.text('☆');
-                    s5.text('☆');
+        stars.forEach((star, index) => {
+            // Обработчик наведения мыши
+            star.mouseover(function() {
+                for (let i = 0; i <= index; i++) {
+                    stars[i].text('★');
                 }
-                if (action === 'star2') {
-                    mark = 2;
-                    s1.text('★');
-                    s2.text('★');
-                    s3.text('☆');
-                    s4.text('☆');
-                    s5.text('☆');
+            }).mouseout(function() {
+                // Восстановление текущей оценки после ухода мыши
+                for (let i = 0; i < stars.length; i++) {
+                    stars[i].text(i < currentRating ? '★' : '☆');
                 }
-                if (action === 'star3') {
-                    mark = 3;
-                    s1.text('★');
-                    s2.text('★');
-                    s3.text('★');
-                    s4.text('☆');
-                    s5.text('☆');
+            }).click(function() {
+                currentRating = index + 1; // Сохранение текущей оценки
+                for (let i = 0; i < stars.length; i++) {
+                    stars[i].text(i < currentRating ? '★' : '☆');
                 }
-                if (action === 'star4') {
-                    mark = 4;
-                    s1.text('★');
-                    s2.text('★');
-                    s3.text('★');
-                    s4.text('★');
-                    s5.text('☆');
-                }
-                if (action === 'star5') {
-                    mark = 5;
-                    s1.text('★');
-                    s2.text('★');
-                    s3.text('★');
-                    s4.text('★');
-                    s5.text('★');
-                }
-                var mark_html = row.find('.grade');
-                mark_html.val(mark);
-                console.log(mark);
+                $('.grade').val(currentRating); // Обновление скрытого поля
             });
         });
+
+        // Установка начального состояния звёзд при загрузке
+        for (let i = 0; i < stars.length; i++) {
+            stars[i].text(i < currentRating ? '★' : '☆');
+        }
+    });
     </script>
 {% endblock %}

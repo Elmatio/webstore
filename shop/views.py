@@ -126,6 +126,7 @@ def product_list(request, category_slug=None):
                 del l_admin[0]
         messages.extend(l_user)
         messages.extend(l_admin)
+    reviews = Review.objects.all()
     context = {
         'category': category,
         'categories': categories,
@@ -138,6 +139,7 @@ def product_list(request, category_slug=None):
         'heights': heights_list,
         'messages': messages,
         'message': message,
+        'reviews': reviews,
     }
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return render(request, 'shop/product/list_partial.html', context)

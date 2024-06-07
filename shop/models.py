@@ -34,6 +34,8 @@ class Product(models.Model):
                               blank=True)
     description = models.TextField(blank=True)
     price = models.IntegerField()
+    discount = models.IntegerField(blank=True, null=True)
+    rating = models.CharField(blank=True, max_length=5)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

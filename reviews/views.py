@@ -18,6 +18,9 @@ def review_add(request, id):
         text = request.POST.get('text')
         mark = int(request.POST.get('mark'))
         mark_stars = mark * '★'
+        p = Product.objects.get(id=1)
+        p.rating = mark
+        p.save()
         review, created = Review.objects.get_or_create(user=request.user,
                                                        product=product,
                                                        text=text,
