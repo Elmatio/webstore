@@ -13,20 +13,17 @@ from .models import CustomUser
 
 def user_login(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(request,
-                                username=cd['username'],
-                                password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('shop:product_list')
-                else:
-                    return HttpResponse('Заблокированный аккаунт')
+        user = authenticate(request,
+                            username=request.POST.get('login'),
+                            password=request.POST.get('password'))
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('account:success_login')
             else:
-                return HttpResponse('Ошибка авторизации')
+                return redirect('account:block_login')
+        else:
+            return redirect('account:invalid_login')
     else:
         form = LoginForm()
     return render(request,
@@ -80,3 +77,18 @@ def edit(request):
     return render(request,
                   'account/edit.html',
                   {'form': form})
+
+
+def success_login(request):
+    return render(request,
+                  'registration/success.html')
+
+
+def invalid_login(request):
+    return render(request,
+                  'registration/invalid_login.html')
+
+
+def block_login(request):
+    return render(request,
+                  'registration/block.html')

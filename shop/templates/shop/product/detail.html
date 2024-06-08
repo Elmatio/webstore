@@ -5,25 +5,48 @@
 
 {% block content %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <div class="detail-img" id="detail-img">
+        <button class="modal__box-btn" id="close-modal-btn">
+            <svg width="23" height="25" viewBox="0 0 23 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.09082 0.03125L22.9999 22.0294L20.909 24.2292L-8.73579e-05 2.23106L2.09082 0.03125Z"
+                    fill="#333333" />
+                <path d="M0 22.0295L20.9091 0.314368L23 2.23125L2.09091 24.2294L0 22.0295Z" fill="#333333" />
+            </svg>
+        </button>
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
+             class="product-zoom-img">
+    </div>
     <div class="product-detail">
-        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
-        <h1>{{ product.name }}</h1>
-        <h2>
-            <a href="{{ product.category.get_absolute_url }}">
-                {{ product.category }}
-            </a>
-        </h2>
-        <h2>Оценка</h2>
-        <h2>{{ mark }}</h2>
-        <p class="price">{{ product.price }} ₽</p>
-        <form class="count-products-detail" action="{% url 'cart:cart_add' product.id %}" method="POST">
-            {% csrf_token %}
-            <button type="button" data-action="minus" class="change-count">-</button>
-            <input data-counter name="quantity" value="1" min="1" class="quantity-input">
-            <button type="button" data-action="plus" class="change-count">+</button>
-            <input type="submit" class="add_to_cart" value="Добавить в корзину">
-        </form>
-        <div style="margin-top:7%;">
+        <div style="display: flex;">
+            <div class="img-container">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
+                    id="product-detail-img">
+            </div>
+            <div>
+                <h1>{{ product.name }}</h1>
+                <h2>
+                    <a href="{{ product.category.get_absolute_url }}">
+                        {{ product.category }}
+                    </a>
+                </h2>
+                <h2>Оценка</h2>
+                <h2>{{ mark }}</h2>
+                <p>Статус: {% if product.available %}В наличии{% else %}Нет в наличии{% endif %}</p>
+                <p class="price">{{ product.price }} ₽</p>
+                <p>Количество</p>
+                <form class="count-products-detail" action="{% url 'cart:cart_add' product.id %}" method="POST">
+                    {% csrf_token %}
+                    <div style="display: flex; width: 120px;">
+                        <button type="button" data-action="minus" class="change-count">-</button>
+                        <input data-counter name="quantity" value="1" min="1" class="quantity-input">
+                        <button type="button" data-action="plus" class="change-count">+</button>
+                    </div>
+                    <br>
+                    <input type="submit" class="add_to_cart" value="Добавить в корзину">
+                </form>
+            </div>
+        </div>
+        <div>
             {{ product.description|linebreaks }}
         </div>
         {% if recommended_products %}
@@ -39,38 +62,66 @@
                 {% endfor %}
             </div>
         {% endif %}
-    <h1>Написать отзыв</h1>
+    <h1 style="margin-bottom: 20px;">Написать отзыв</h1>
+    <div class="grade__container">
+    <h3>Оцените товар от 1 до 5</h3>
+        <div style="display: flex;">
+            <h2 id="s1" class="mark" data-action="star1">☆</h2>
+            <h2 id="s2" class="mark" data-action="star2">☆</h2>
+            <h2 id="s3" class="mark" data-action="star3">☆</h2>
+            <h2 id="s4" class="mark" data-action="star4">☆</h2>
+            <h2 id="s5" class="mark" data-action="star5">☆</h2>
+        </div>
+    </div>
     <form action="{% url 'reviews:reviews' product.id %}" method="POST">
         {% csrf_token %}
-        <input type="text" placeholder="Напечатайте комментарий..." name="text">
-        <input type="hidden" name="mark" class="grade">
-        <input type="submit" value="Сохранить комментарий">
+        <div style="margin-bottom: 10px;">
+            <textarea placeholder="Напечатайте комментарий..." name="text" class="review__input"></textarea>
+            <input type="hidden" name="mark" class="grade">
+        </div>
+        <input type="submit" value="Отправить комментарий">
     </form>
-    <div style="display: flex;">
-        <h2 id="s1" class="mark" data-action="star1">☆</h2>
-        <h2 id="s2" class="mark" data-action="star2">☆</h2>
-        <h2 id="s3" class="mark" data-action="star3">☆</h2>
-        <h2 id="s4" class="mark" data-action="star4">☆</h2>
-        <h2 id="s5" class="mark" data-action="star5">☆</h2>
-    </div>
     <h1 style="margin-bottom: 50px;">Отзывы</h1>
     {% for review in reviews %}
-        <div style="display: block; margin-bottom: 50px; width: 50%; border-radius:20px; background: #efefef;">
-            <div style="display: flex; flex-direction: column;">
-                <div>
-                    <h3>{{review.user.name}}</h3>
-                    <h3>{{review.user.last_name}}</h3>
-                    <h2>{{review.text}}</h2>
+        <div class="review__container">
+            <div class="review__grade">
+                <div class="review__user">
+                    <h3>{{ review.user.last_name }}</h3>
+                    <h3>{{ review.user.first_name }}</h3>
                 </div>
                 <div>
                     <h2>{{ review.mark_stars }}</h2>
                 </div>
             </div>
+            <div>
+                <h2 style="word-wrap: break-word;">{{ review.text }}</h2>
+            </div>
         </div>
     {% endfor %}
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+    <script>
+        document.getElementById("product-detail-img").addEventListener("click", function() {
+                document.getElementById("detail-img").classList.add("open");
+        });
+        document.getElementById("close-modal-btn").addEventListener("click", function() {
+            document.getElementById("detail-img").classList.remove("open");
+        });
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('detail-img').classList.remove('open');
+            }
+        });
+
+        document.querySelector('#detail-img').addEventListener('click', event => {
+            event.is_ClickWithInModal = true;
+        });
+
+        document.getElementById('detail-img').addEventListener('click', event => {
+            if (event._isClickWithInModal) return;
+            event.currentTarget.classList.remove('open');
+        });
+
         $(document).ready(function() {
             // Изменение количества товаров
             $(document).on('click', '.change-count', function() {
@@ -84,38 +135,35 @@
                 }
                 quantityElement.val(currentQuantity);
             });
-
-            // Оповещение об успешном добавлении товара в корзину
-
         });
         $(document).ready(function() {
-        var stars = [$('#s1'), $('#s2'), $('#s3'), $('#s4'), $('#s5')];
-        var currentRating = 0; // Текущая оценка
+            var stars = [$('#s1'), $('#s2'), $('#s3'), $('#s4'), $('#s5')];
+            var currentRating = 0; // Текущая оценка
 
-        stars.forEach((star, index) => {
-            // Обработчик наведения мыши
-            star.mouseover(function() {
-                for (let i = 0; i <= index; i++) {
-                    stars[i].text('★');
-                }
-            }).mouseout(function() {
-                // Восстановление текущей оценки после ухода мыши
-                for (let i = 0; i < stars.length; i++) {
-                    stars[i].text(i < currentRating ? '★' : '☆');
-                }
-            }).click(function() {
-                currentRating = index + 1; // Сохранение текущей оценки
-                for (let i = 0; i < stars.length; i++) {
-                    stars[i].text(i < currentRating ? '★' : '☆');
-                }
-                $('.grade').val(currentRating); // Обновление скрытого поля
+            stars.forEach((star, index) => {
+                // Обработчик наведения мыши
+                star.mouseover(function() {
+                    for (let i = 0; i <= index; i++) {
+                        stars[i].text('★');
+                    }
+                }).mouseout(function() {
+                    // Восстановление текущей оценки после ухода мыши
+                    for (let i = 0; i < stars.length; i++) {
+                        stars[i].text(i < currentRating ? '★' : '☆');
+                    }
+                }).click(function() {
+                    currentRating = index + 1; // Сохранение текущей оценки
+                    for (let i = 0; i < stars.length; i++) {
+                        stars[i].text(i < currentRating ? '★' : '☆');
+                    }
+                    $('.grade').val(currentRating); // Обновление скрытого поля
+                });
             });
-        });
 
-        // Установка начального состояния звёзд при загрузке
-        for (let i = 0; i < stars.length; i++) {
-            stars[i].text(i < currentRating ? '★' : '☆');
-        }
-    });
+            // Установка начального состояния звёзд при загрузке
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].text(i < currentRating ? '★' : '☆');
+            }
+        });
     </script>
 {% endblock %}

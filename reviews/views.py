@@ -12,13 +12,13 @@ def review_add(request, id):
     product = get_object_or_404(Product, id=id)
     if request.method == 'POST':
         username = request.user.username
-        reviews = Review.objects.filter(user__username=username)
+        reviews = Review.objects.filter(user__username=username, product=product)
         if reviews.exists():
             reviews.delete()
         text = request.POST.get('text')
         mark = int(request.POST.get('mark'))
         mark_stars = mark * '★'
-        p = Product.objects.get(id=1)
+        p = Product.objects.get(id=id)
         p.rating = mark
         p.save()
         review, created = Review.objects.get_or_create(user=request.user,

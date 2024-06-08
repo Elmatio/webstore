@@ -1,17 +1,17 @@
 {% load static %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{% block title %}{% endblock %}</title>
-        <link href="{% static 'css/base.css' %}" rel="stylesheet">
-    </head>
-    <body>
-        <div id="header">
-            <span class="logo">Авторизация</span>
-        </div>
-        <div id="content">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<a href="{% url 'shop:product_list' %}" style="position: absolute; left: 10%; top: 15px;">
+    <img src="{% static 'img/logo_login.PNG' %}">
+</a>
+<body class="body">
+    <div class="wrapper-login">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>

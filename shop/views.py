@@ -19,17 +19,13 @@ def product_list(request, category_slug=None):
     products = Product.objects.all()
 
     if category_slug == 'about':
-        return render(request,
-                      'shop/navigation/about.html')
+        return render(request, 'shop/navigation/about.html')
     elif category_slug == 'contacts':
-        return render(request,
-                      'shop/navigation/contacts.html')
+        return render(request, 'shop/navigation/contacts.html')
     elif category_slug == 'delivery':
-        return render(request,
-                      'shop/navigation/delivery.html')
+        return render(request, 'shop/navigation/delivery.html')
     elif category_slug == 'installment':
-        return render(request,
-                      'shop/navigation/installment.html')
+        return render(request, 'shop/navigation/installment.html')
     elif category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
@@ -42,63 +38,37 @@ def product_list(request, category_slug=None):
 
     # Фильтры по цвету, производителю, материалу, длине, ширине и высоте
     colors = request.GET.getlist('color[]')
-    products_colors = []
     if colors:
-        for i in products:
-            for j in colors:
-                if j.lower() in i.description.lower():
-                    products_colors.append(i.name)
-        products = products.filter(name__in=products_colors)
+        products = products.filter(description__icontains='|'.join(colors))
 
     manufacturers = request.GET.getlist('manufacturer[]')
-    products_manufacturers = []
     if manufacturers:
-        for i in products:
-            for j in manufacturers:
-                if j in i.description:
-                    products_manufacturers.append(i.name)
-        products = products.filter(name__in=products_manufacturers)
+        products = products.filter(description__icontains='|'.join(manufacturers))
 
     materials = request.GET.getlist('material[]')
-    products_materials = []
     if materials:
-        for i in products:
-            for j in materials:
-                if j in i.description:
-                    products_materials.append(i.name)
-        products = products.filter(name__in=products_materials)
+        products = products.filter(description__icontains='|'.join(materials))
 
     lengths = request.GET.getlist('length[]')
-    products_lengths = []
     if lengths:
-        for i in products:
-            for j in lengths:
-                if "Длина (см): " + j in i.description:
-                    products_lengths.append(i.name)
-        products = products.filter(name__in=products_lengths)
+        products = products.filter(description__icontains='|'.join(["Длина (см): " + length for length in lengths]))
 
     widths = request.GET.getlist('width[]')
-    products_widths = []
     if widths:
-        for i in products:
-            for j in widths:
-                if "Ширина (см): " + j in i.description:
-                    products_widths.append(i.name)
-        products = products.filter(name__in=products_widths)
+        products = products.filter(description__icontains='|'.join(["Ширина (см): " + width for width in widths]))
 
     heights = request.GET.getlist('height[]')
-    products_heights = []
     if heights:
-        for i in products:
-            for j in heights:
-                if "Высота (см): " + j in i.description:
-                    products_heights.append(i.name)
-        products = products.filter(name__in=products_heights)
+        products = products.filter(description__icontains='|'.join(["Высота (см): " + height for height in heights]))
 
     search = request.GET.get('search_field')
-
     if search:
         products = products.filter(name__iregex=search)
+
+    offset = int(request.GET.get('offset', 0))
+    limit = 20  # Количество товаров для подгрузки за один раз
+    products = products[offset:offset + limit]
+
     messages = []
     message = []
     if request.user.is_authenticated:
@@ -107,25 +77,8 @@ def product_list(request, category_slug=None):
         admin = CustomUser.objects.get(username='ahmat')
         messages_admin = Message.objects.filter(user=admin, user_to=user)
         message = admin
-        messages = []
-        l_user = [i for i in messages_user]
-        l_admin = [i for i in messages_admin]
-        while l_user and l_admin:
-            if l_user[0].date < l_admin[0].date:
-                messages.append(l_user[0])
-                del l_user[0]
-            elif l_user[0].date == l_admin[0].date:
-                if l_user[0].time < l_admin[0].time:
-                    messages.append(l_user[0])
-                    del l_user[0]
-                else:
-                    messages.append(l_admin[0])
-                    del l_admin[0]
-            else:
-                messages.append(l_admin[0])
-                del l_admin[0]
-        messages.extend(l_user)
-        messages.extend(l_admin)
+        messages = sorted(list(messages_user) + list(messages_admin), key=lambda x: (x.date, x.time))
+
     reviews = Review.objects.all()
     context = {
         'category': category,
@@ -141,10 +94,19 @@ def product_list(request, category_slug=None):
         'message': message,
         'reviews': reviews,
     }
+
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return render(request, 'shop/product/list_partial.html', context)
 
     return render(request, 'shop/product/list.html', context)
+
+
+def load_more_products(request):
+    offset = int(request.GET.get('offset', 0))
+    limit = 20  # Количество товаров для подгрузки за один раз
+    products = Product.objects.all()[offset:offset + limit]
+    data = [{'id': product.id, 'name': product.name, 'price': product.price, 'discount': product.discount, 'image': product.image.url if product.image else '', 'rating': product.rating} for product in products]
+    return JsonResponse(data, safe=False)
 
 
 def product_detail(request, id, slug):

@@ -1,110 +1,98 @@
 {% load static %}
 {% load custom_filters %}
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список товаров</title>
-</head>
-<body>
-    <div class="container">
-        {% for product in filter %}
-        <div class="card">
-            <div class="card__top">
-                <a href="{{ product.get_absolute_url }}" class="card__img">
-                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
-                </a>
+{% block content %}
+<div class="container">
+    {% for product in filter %}
+    <div class="card">
+        <div class="card__top">
+            <a href="{{ product.get_absolute_url }}" class="card__img">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" alt="{{ product.name }}">
+            </a>
+            {% if product.discount %}
+                <div class="card__label">-{{ product.discount }}%</div>
+            {% endif %}
+        </div>
+        <div class="card__bottom">
+            <div class="card__prices">
                 {% if product.discount %}
-                    <div class="card__label">-{{ product.discount }}%</div>
+                    <div class="card__price card__price--discount">
+                        {{ product.price|discounted_price:product.discount }}
+                    </div>
+                    <div class="card__price card__price--common">{{ product.price }}</div>
+                {% else %}
+                    <div class="card__price__without__discount">{{ product.price }}</div>
                 {% endif %}
             </div>
-            <div class="card__bottom">
-                <div class="card__prices">
-                    {% if product.discount %}
-                        <div class="card__price card__price--discount">
-                            {{ product.price|discounted_price:product.discount }}
-                        </div>
-                        <div class="card__price card__price--common">{{ product.price }}</div>
-                    {% else %}
-                        <div class="card__price__without__discount">{{ product.price }}</div>
-                    {% endif %}
-                </div>
-                <div class="rating-container">
-                    {% if product.rating %}
-                        <p>Рейтинг</p>
-                        <p class="rating-value">{{ product.rating }}/5 <span class="rating-star">★</span></p>
-                    {% else %}
-                        <p>Нет оценок</p>
-                    {% endif %}
-                </div>
-                <a href="{{ product.get_absolute_url }}" class="card__title">{{ product.name }}</a>
+            <div class="rating-container">
+                {% if product.rating %}
+                    <p>Рейтинг</p>
+                    <p class="rating-value">{{ product.rating }}/5 <span class="rating-star">★</span></p>
+                {% else %}
+                    <p>Нет оценок</p>
+                {% endif %}
             </div>
-            <div class="product-hover">
-                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-form">
-                    {% csrf_token %}
-                    <button type="button" data-action="minus" class="change-count">-</button>
-                    <input data-counter name="quantity" value="1" min="1" class="quantity-input">
-                    <button type="button" data-action="plus" class="change-count" style="margin-right: 10px;">+</button>
-                    <input type="submit" class="add_to_cart" value="Добавить в корзину">
-                </form>
-            </div>
+            <a href="{{ product.get_absolute_url }}" class="card__title">{{ product.name }}</a>
         </div>
-        {% endfor %}
+        <div class="product-hover">
+            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-form">
+                {% csrf_token %}
+                <button type="button" data-action="minus" class="change-count">-</button>
+                <input data-counter name="quantity" value="1" min="1" class="quantity-input">
+                <button type="button" data-action="plus" class="change-count" style="margin-right: 10px;">+</button>
+                <input type="submit" class="add_to_cart" value="Добавить в корзину">
+            </form>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Обработка hover-эффекта для отображения подменю
-            $('.card').hover(
-                function() {
-                    console.log('Навели на карточку товара');
-                    var productHover = $(this).find('.product-hover');
-                    productHover.stop(true, true).fadeIn(200);
-                    console.log('Product hover element:', productHover);
-                    var inputElements = productHover.find('input');
-                    console.log('Input elements:', inputElements);
-                    inputElements.each(function(index, element) {
-                        console.log('Input element', index, ':', $(element).attr('name'), $(element).val());
-                    });
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Обработка hover-эффекта для отображения подменю
+        $('.card').hover(
+            function() {
+                console.log('Навели на карточку товара');
+                $(this).find('.product-hover').stop(true, true).fadeIn(200);
+            },
+            function() {
+                console.log('Убрали курсор с карточки товара');
+                $(this).find('.product-hover').stop(true, true).fadeOut(200);
+            }
+        );
+
+        // Обработка изменения количества товара
+        $(document).on('click', '.change-count', function() {
+            var quantityElement = $(this).siblings('.quantity-input');
+            var currentQuantity = parseInt(quantityElement.val());
+            var action = $(this).data('action');
+            if (action === 'plus') {
+                currentQuantity++;
+            } else if (action === 'minus' && currentQuantity > 1) {
+                currentQuantity--;
+            }
+            quantityElement.val(currentQuantity);
+        });
+
+        // AJAX-отправка формы добавления товара в корзину
+        $(document).on('submit', '.add-to-cart-form', function(event) {
+            event.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function(response) {
+                    alert('Товар успешно добавлен в корзину');
                 },
-                function() {
-                    console.log('Убрали курсор с карточки товара');
-                    $(this).find('.product-hover').stop(true, true).fadeOut(200);
+                error: function(xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
                 }
-            );
-
-            // Обработка изменения количества товара
-            $(document).on('click', '.change-count', function() {
-                var quantityElement = $(this).siblings('.quantity-input');
-                var currentQuantity = parseInt(quantityElement.val());
-                var action = $(this).data('action');
-                if (action === 'plus') {
-                    currentQuantity++;
-                } else if (action === 'minus' && currentQuantity > 1) {
-                    currentQuantity--;
-                }
-                quantityElement.val(currentQuantity);
-            });
-
-            // AJAX-отправка формы добавления товара в корзину
-            $(document).on('submit', '.add-to-cart-form', function(event) {
-                event.preventDefault();
-                var form = $(this);
-                $.ajax({
-                    url: form.attr('action'),
-                    type: form.attr('method'),
-                    data: form.serialize(),
-                    success: function(response) {
-                        alert('Товар успешно добавлен в корзину');
-                    },
-                    error: function(xhr, errmsg, err) {
-                        console.log(xhr.status + ": " + xhr.responseText);
-                    }
-                });
             });
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+{% endblock %}

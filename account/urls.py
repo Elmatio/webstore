@@ -12,4 +12,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/<int:user_id>/', views.profile, name='profile'),
     path('edit/', views.edit, name='edit'),
+    path('login/success/', views.success_login, name='success_login'),
+    path('login/invalid/', views.invalid_login, name='invalid_login'),
+    path('login/block/', views.block_login, name='block_login'),
 ]

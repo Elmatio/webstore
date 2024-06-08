@@ -1,18 +1,24 @@
-{% extends "shop/base.html" %}
-
-{% block title %}Авторизация{% endblock %}
+{% extends 'base.html' %}
 
 {% block content %}
+<form action="{% url 'account:login' %}" method="post">
+    {% csrf_token %}
     <h1>Авторизация</h1>
-    <br>
-    <form method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <p><input type="submit" value="Войти"></p>
-    </form>
-    <p style="clear:both; font-size:12px;">
-        <a href="{% url 'account:register' %}" style="color: #F77B07;">
-            Ещё нет аккаунта? Зарегистрировать сейчас
-        </a>
-    </p>
+    <div class="input-box">
+        <input type="text" placeholder="Логин..." required name="login">
+        <i class="bx bxs-user"></i>
+    </div>
+    <div class="input-box">
+        <input type="password" placeholder="Пароль..." required name="password">
+        <i class="bx bxs-lock-alt"></i>
+    </div>
+    <div class="remember-forgot">
+        <label><input type="checkbox">Запомнить меня</label>
+        <a href="#">Забыли пароль?</a>
+    </div>
+    <button type="submit" class="btn">Войти</button>
+    <div class="register-link">
+        <p>Ещё нет аккаунта? <a href="{% url 'account:register' %}">Зарегистрировать сейчас</a></p>
+    </div>
+</form>
 {% endblock %}
