@@ -1,12 +1,12 @@
-{% extends 'shop/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Регистрация{% endblock %}
 
 {% block content %}
-    <h1>Регистрация</h1>
-    <form method="post">
+    <h1 style="margin-bottom: 0;">Регистрация</h1>
+    <form method="post" class="wrapper-login" style="position: relative;">
         {{ form.as_p }}
         {% csrf_token %}
-        <p><input type="submit" value="Зарегистрироваться"></p>
+        <input type="submit" value="Зарегистрироваться" class="btn" style="position: absolute; top: 700px; left: 5%; width:80%;">
     </form>
 {% endblock %}

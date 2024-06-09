@@ -429,6 +429,7 @@ svg {
 
 .logo {
     width: 220px;
+    margin-right: 5%;
 }
 
 .logo_img {
@@ -442,7 +443,7 @@ svg {
 }
 
 .form_search input {
-  border-radius: 42px;
+  border-radius: 17px;
   background: #fff;
   outline: none;
   width: 200px;
@@ -1448,4 +1449,131 @@ form .add_to_cart {
 .login_link {
     font-size: 20px;
     text-decoration: underline;
+}
+
+body, ul {
+    margin: 0;
+    padding: 0;
+}
+
+.menu-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    z-index: 999;
+    margin-left: 25%;
+    border-radius: 8px;
+    border: 1px solid #fff;
+    width: 3%;
+    align-items: center;
+}
+
+.btn-line {
+    width: 40px;
+    height: 3px;
+    background-color: #333;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    outline: none;
+}
+
+.btn-line:focus {
+    background-color: #111;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: calc(100% - 20px);
+    max-width: 250px;
+    height: 100%;
+    background-color: #f4f4f4;
+    transition: all 0.3s ease;
+    z-index: 99;
+    margin-top: 8%;
+}
+
+.menu-items {
+    list-style: none;
+}
+
+.menu-items li {
+    padding: 15px;
+}
+
+.menu-items li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+}
+
+.menu-open {
+    left: 0;
+}
+
+.submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    position: relative;
+    background-color: #333;
+    color: #fff;
+}
+
+.submenu li {
+    padding: 8px 20px;
+}
+
+.has-submenu:hover .submenu {
+    display: block;
+}
+
+.submenu-right {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #333;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 160px;
+}
+
+.menu .has-submenu:hover .submenu-right {
+    display: block;
+}
+
+.menu li a {
+    text-decoration: none;
+}
+
+.menu .submenu-right {
+    display: none;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 160px;
+    border-radius: 10px;
+}
+
+.has-submenu {
+    position: relative;
 }

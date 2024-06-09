@@ -10,19 +10,19 @@
     <body style="position: relative;">
         <div class="header">
             <div class="logo"><a href="/"><img class="logo_img" src='{% static "img/result.png" %}'></a></div>
-            <div class="container">
-                <div>
-                    <a href="#">
-                        <button class="btn">
-                            <svg width="180px" height="60px" viewBox="0 0 0 0" class="border">
-                                <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
-                                <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
-                            </svg>
-                        <span>КАТАЛОГ</span>
-                        </button>
-                    </a>
-                </div>
-            </div>
+<!--            <div class="container">-->
+<!--                <div>-->
+<!--                    <a href="#">-->
+<!--                        <button class="btn">-->
+<!--                            <svg width="180px" height="60px" viewBox="0 0 0 0" class="border">-->
+<!--                                <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />-->
+<!--                                <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />-->
+<!--                            </svg>-->
+<!--                        <span>КАТАЛОГ</span>-->
+<!--                        </button>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="form_search">
                 <form action="{% url 'shop:product_list' %}" method="get">
                   <input type="text" placeholder="Искать здесь..." name="search_field">
