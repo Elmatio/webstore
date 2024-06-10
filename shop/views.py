@@ -15,6 +15,7 @@ from .filters import *
 
 def product_list(request, category_slug=None):
     category = None
+    category_main = None
     categories = Category.objects.all()
     products = Product.objects.all()
 
@@ -28,6 +29,7 @@ def product_list(request, category_slug=None):
         return render(request, 'shop/navigation/installment.html')
     elif category_slug:
         category = get_object_or_404(Category, slug=category_slug)
+        category_main = Category.objects.filter(main=category.main)
         products = products.filter(category=category)
 
     # Фильтр по цене
@@ -79,8 +81,41 @@ def product_list(request, category_slug=None):
         message = admin
         messages = sorted(list(messages_user) + list(messages_admin), key=lambda x: (x.date, x.time))
 
+    category_furniture = Category.objects.filter(main='Мебель')
+    category_tile = Category.objects.filter(main='Плитка керамическая')
+    category_flooring = Category.objects.filter(main='Напольные покрытия')
+    category_wallpaper = Category.objects.filter(main='Обои')
+    category_interior = Category.objects.filter(main='Интерьер')
+    category_plumbing = Category.objects.filter(main='Сантехника')
+    category_paintwork = Category.objects.filter(main='Лакокраска')
+    category_instrument = Category.objects.filter(main='Инструмент')
+    category_coverings = Category.objects.filter(main='Настенные покрытия')
+    category_lumber = Category.objects.filter(main='Пиломатериалы, столярные изделия')
+    category_lamps = Category.objects.filter(main='Светильники')
+    category_build = Category.objects.filter(main='Строительные материалы')
+    category_mixes = Category.objects.filter(main='Сухие смеси')
+    category_doors = Category.objects.filter(main='Двери')
+    category_electrical = Category.objects.filter(main='Электротовары')
+
+
     reviews = Review.objects.all()
     context = {
+        'category_main': category_main,
+        'category_furniture': category_furniture,
+        'category_tile': category_tile,
+        'category_flooring': category_flooring,
+        'category_wallpaper': category_wallpaper,
+        'category_interior': category_interior,
+        'category_plumbing': category_plumbing,
+        'category_paintwork': category_paintwork,
+        'category_instrument': category_instrument,
+        'category_coverings': category_coverings,
+        'category_lumber': category_lumber,
+        'category_lamps': category_lamps,
+        'category_build': category_build,
+        'category_mixes': category_mixes,
+        'category_doors': category_doors,
+        'category_electrical': category_electrical,
         'category': category,
         'categories': categories,
         'filter': products,

@@ -4,6 +4,7 @@ from django.urls import reverse
 
 # Create your models here.
 class Category(models.Model):
+    main = models.CharField(max_length=200, blank=True)
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200,
                             unique=True)

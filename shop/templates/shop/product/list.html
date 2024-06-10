@@ -16,231 +16,176 @@
 <nav class="menu">
   <h1>Каталог</h1>
   <ul class="menu-items">
+    <li {% if not category %}class="selected"{% endif %}>
+        <a href="{% url 'shop:product_list' %}">Все</a>
+    </li>
     <li class="has-submenu">
         <a href="#">Мебель</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 1.1</a>
+            {% for c in category_furniture %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 1.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 1.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
     <li class="has-submenu">
         <a href="#">Плитка керамическая</a>
-        <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 2.1</a>
+                <ul class="submenu submenu-right">
+            {% for c in category_tile %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 2.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 2.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
     <li class="has-submenu">
         <a href="#">Напольные покрытия</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 3.1</a>
+            {% for c in category_flooring %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 3.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 3.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
     <li class="has-submenu">
         <a href="#">Обои</a>
-        <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+                <ul class="submenu submenu-right">
+            {% for c in category_wallpaper %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
       <li class="has-submenu">
         <a href="#">Интерьер</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_interior %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
       <li class="has-submenu">
         <a href="#">Сантехника</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_plumbing %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
       <li class="has-submenu">
         <a href="#">Лакокраска</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_paintwork %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
       <li class="has-submenu">
         <a href="#">Инструмент</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_instrument %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
       <li class="has-submenu">
         <a href="#">Настенные покрытия</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_coverings %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
       <li class="has-submenu">
         <a href="#">Пиломатериалы, столярные изделия</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_lumber %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
        <li class="has-submenu">
         <a href="#">Светильники</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_lamps %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
        <li class="has-submenu">
         <a href="#">Строительные материалы</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_build %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
        <li class="has-submenu">
         <a href="#">Сухие смеси</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_mixes %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
       <li class="has-submenu">
         <a href="#">Двери</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_doors %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
       <li class="has-submenu">
         <a href="#">Электротовары</a>
         <ul class="submenu submenu-right">
-            <li class="has-submenu-1">
-                <a href="#">Подкатегория 4.1</a>
+            {% for c in category_electrical %}
+            <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             </li>
-            <li class="has-submenu-2">
-                <a href="#">Подкатегория 4.2</a>
-            </li>
-            <li class="has-submenu-3">
-                <a href="#">Подкатегория 4.3</a>
-            </li>
+            {% endfor %}
         </ul>
     </li>
   </ul>
 </nav>
 <script>
 </script>
+        {% if category %}
         <h3>Каталог</h3>
-        <ul>
-            <li {% if not category %}class="selected"{% endif %}>
-                <a href="{% url 'shop:product_list' %}">Все</a>
-            </li>
-            {% for c in categories %}
-                <li {% if category.slug == c.slug %}class="selected"{% endif %}>
-                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+            <ul>
+                <li {% if not category %}class="selected"{% endif %}>
+                    <a href="{% url 'shop:product_list' %}">Все</a>
                 </li>
-            {% endfor %}
-        </ul>
+                {% for c in category_main %}
+                    <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                        <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <!-- Фильтр по цене -->
         <div class="wrapper">
             <header>
