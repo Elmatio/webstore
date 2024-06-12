@@ -46,6 +46,19 @@
     </div>
     {% endfor %}
 </div>
+{% if category %}
+    <div class="page__container">
+        {% if filter.has_previous %}
+            <a href="?page={{ filter.previous_page_number }}" class="page__link"><</a>
+        {% endif %}
+        {% for p in page_obj.paginator.page_range %}
+            <a href="?page={{ p }}" class="page__link">{{ p }}</a>
+        {% endfor %}
+        {% if filter.has_next %}
+            <a href="?page={{ filter.next_page_number }}" class="page__link">></a>
+        {% endif %}
+    </div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

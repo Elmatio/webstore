@@ -11,6 +11,7 @@ from .recommender import Recommender
 from django.views.generic import ListView
 from django.db.models import Q
 from .filters import *
+from django.core.paginator import Paginator
 
 
 def product_list(request, category_slug=None):
@@ -18,6 +19,7 @@ def product_list(request, category_slug=None):
     category_main = None
     categories = Category.objects.all()
     products = Product.objects.all()
+    page_obj = None
 
     if category_slug == 'about':
         return render(request, 'shop/navigation/about.html')
@@ -97,6 +99,12 @@ def product_list(request, category_slug=None):
     category_doors = Category.objects.filter(main='Двери')
     category_electrical = Category.objects.filter(main='Электротовары')
 
+    if category:
+        paginator = Paginator(products, 3)
+        page_number = request.GET.get('page', 1)
+        products = paginator.page(page_number)
+        page_obj = paginator.get_page(page_number)
+
 
     reviews = Review.objects.all()
     context = {
@@ -128,6 +136,7 @@ def product_list(request, category_slug=None):
         'messages': messages,
         'message': message,
         'reviews': reviews,
+        'page_obj': page_obj,
     }
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':

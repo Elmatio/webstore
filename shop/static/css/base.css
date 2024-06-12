@@ -1085,6 +1085,7 @@ iframe {
     flex-wrap: wrap;
     gap: 20px; /* Расстояние между карточками */
     justify-content: start; /* Центрирует карточки по горизонтали */
+    margin-bottom: 50px;
 }
 
 .card {
@@ -1576,4 +1577,32 @@ body, ul {
 
 .has-submenu {
     position: relative;
+}
+
+.page__link {
+    background-color: #333333;
+    color: #fff;
+    width: 3%;
+    height: 35px;
+    text-align: center;
+    padding-top: 7px;
+    border-radius: 40px;
+}
+
+.page__link:hover {
+    background-color: #F77B07;
+    color: #fff;
+}
+
+.page__container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    position: absolute;
+    width: 60%;
+}
+
+.page__link:focus {
+    background-color: #F77B07;
+    color: #fff;
 }
