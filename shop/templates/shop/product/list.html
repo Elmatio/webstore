@@ -298,7 +298,7 @@
             {% include 'shop/product/list_partial.html' %}
         </div>
     </div>
-    <div class="modal" id="modal" style="background-color: #F4B752;">
+    <div class="modal" id="modal">
             <div class="modal__box">
                 <button class="modal__box-btn" id="close-modal-btn">
                     <svg width="23" height="25" viewBox="0 0 23 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -314,7 +314,7 @@
                                 <p>{{ user.lastname }}</p>
                                 <p>{{ user.firstname }}</p>
                             </div>
-                            <div style="position: sticky; background-color: #fff; z-index: 1; top: 0;">
+                            <div class="chat__header">
                                 <h1>
                                     Чат c {{ message.last_name }}
                                     {{ message.first_name }}
@@ -322,24 +322,30 @@
                             </div>
                             {% for m in messages %}
                                 {% if m.user.username == 'ahmat' %}
-                                    <h2 style="background: #efefef; border-radius: 20px; width:40%; height:100px;">{{m.text}} {{m.time}}</h2>
+                                    <h3 class="message__admin">{{m.text}} {{m.time}}</h3>
+                                    <br>
                                 {% else %}
-                                    <h2 style="background: orange; border-radius: 20px; width: 40%; height:100px;">{{ m.text }} {{ m.time }}</h2>
+                                <div class="message__user__container">
+                                    <h3 class="message__user__text">{{ m.text }} {{ m.time }}</h3>
+                                    <br>
+                                </div>
                                 {% endif %}
                             {% endfor %}
                             <form class="chat-form" action="{% url 'chat:message' request.user.id %}" method="post">
                                 {% csrf_token %}
                                 <p>Введите сообщение:</p>
-                                <input class="text" type="text" placeholder="Текст..." name="message">
-                                <button class="beauty-button" type="submit">Отправить сообщение</button>
+                                <div class="chat-input">
+                                    <textarea class="review__input" type="text" placeholder="Текст..." name="message"></textarea>
+                                    <button class="beauty-button" type="submit">Отправить сообщение</button>
+                                </div>
                             </form>
                         {% elif request.user.username == 'ahmat' %}
                             <h2>Сообщения</h2>
                             {% for message in messages %}
                                 <a href="{% url 'chat:chat_detail' message.id %}">
-                                <div style="background: #efefef; width: 30%; max-height: 200px; min-height: 60px; border-radius: 40px; padding-left: 2%;">
-                                    <div style="display: flex;">
-                                        <h3 style="padding-right: 1%;">{{ message.user.last_name }}</h3>
+                                <div class="chat-detail">
+                                    <div class="chat-detail__input">
+                                        <h3 class="chat-detail__last-name">{{ message.user.last_name }}</h3>
                                         <h3>{{ message.user.first_name }}</h3>
                                     </div>
                                     <h3>{{ message.text }}</h3>

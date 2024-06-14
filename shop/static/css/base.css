@@ -1029,7 +1029,7 @@ iframe {
 }
 
 .modal__box {
-    max-width: 1000px;
+    width: 1000px;
     padding: 45px;
     z-index: 1;
     background-color: white;
@@ -1066,8 +1066,7 @@ iframe {
 }
 
 .modal__box-btn:hover svg path {
-    fill: #fff;
-    cursor: pointer;
+    fill: #F77B07;
 }
 
 .open-modal-btn {
@@ -1605,4 +1604,56 @@ body, ul {
 .page__link:focus {
     background-color: #F77B07;
     color: #fff;
+}
+
+.chat-input {
+    display: flex;
+    text-align: center;
+    gap: 5px;
+}
+
+.chat-detail {
+    background: #efefef;
+    width: 30%;
+    max-height: 200px;
+    min-height: 60px;
+    border-radius: 40px;
+    padding-left: 2%;
+}
+
+.chat-detail__input {
+    display: flex;
+}
+
+.chat-detail__last-name {
+    padding-right: 1%;
+}
+
+.message__admin {
+    background: #efefef;
+    border-radius: 20px;
+    padding: 20px;
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+.message__user__container {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.message__user__text {
+    background-color: orange;
+    border-radius: 20px;
+    padding: 20px;
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+.chat__header {
+    position: sticky;
+    background-color: #fff;
+    z-index: 1;
+    top: 0;
 }
