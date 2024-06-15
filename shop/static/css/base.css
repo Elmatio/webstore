@@ -1489,13 +1489,14 @@ body, ul {
     position: fixed;
     top: 0;
     left: -100%;
-    width: calc(100% - 20px);
+    width: calc(100% - 10px);
     max-width: 250px;
     height: 100%;
-    background-color: #f4f4f4;
+    background-color: #ffff;
     transition: all 0.3s ease;
     z-index: 99;
     margin-top: 8%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .menu-items {
@@ -1522,8 +1523,8 @@ body, ul {
     margin: 0;
     display: none;
     position: relative;
-    background-color: #333;
-    color: #fff;
+    background-color: #fff;
+    color: #111;
 }
 
 .submenu li {
@@ -1534,6 +1535,14 @@ body, ul {
     display: block;
 }
 
+.has-submenu:hover {
+    background-color: #F77B07;
+}
+
+.has-submenu:hover a {
+    color: #fff;
+}
+
 .submenu-right {
     list-style: none;
     padding: 0;
@@ -1542,7 +1551,7 @@ body, ul {
     position: absolute;
     top: 0;
     left: 100%;
-    background-color: #333;
+    background-color: #fff;
     border: 1px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
@@ -1570,8 +1579,8 @@ body, ul {
     border: 1px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    width: 160px;
-    border-radius: 10px;
+    width: 200px;
+    border-radius: 12px;
 }
 
 .has-submenu {
@@ -1656,4 +1665,16 @@ body, ul {
     background-color: #fff;
     z-index: 1;
     top: 0;
+}
+
+.list-subcategory a {
+    color: #111 !important;
+}
+
+.list-subcategory:hover a {
+    color: #fff !important;
+}
+
+.list-subcategory:hover {
+    background-color: #F77B07;
 }
