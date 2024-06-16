@@ -29,10 +29,15 @@ def product_list(request, category_slug=None):
         return render(request, 'shop/navigation/delivery.html')
     elif category_slug == 'installment':
         return render(request, 'shop/navigation/installment.html')
+    elif category_slug == 'add_product':
+        return render(request,
+                      'shop/navigation/add_product.html',
+                      {'categories': categories})
     elif category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         category_main = Category.objects.filter(main=category.main)
         products = products.filter(category=category)
+
 
     # Фильтр по цене
     min_price = request.GET.get('min_price')

@@ -19,4 +19,6 @@ urlpatterns = [
          name='delivery'),
     path('installment/', views.product_list,
          name='installment'),
+    path('add_product/', views.product_list,
+         name='add_product'),
 ]

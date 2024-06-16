@@ -1008,7 +1008,7 @@ iframe {
 }
 
 .text {
-    width: 30%;
+    width: 400px;
 }
 
 .modal {
@@ -1582,7 +1582,6 @@ body, ul {
     width: 200px;
     border-radius: 12px;
 }
-
 .has-submenu {
     position: relative;
 }
@@ -1677,4 +1676,22 @@ body, ul {
 
 .list-subcategory:hover {
     background-color: #F77B07;
+}
+
+.message__admin__admin {
+    background: orange;
+    border-radius: 20px;
+    padding: 20px;
+    display: inline-block;
+    margin-bottom: 0;
+    box-shadow: 5px 3px 4px 3px rgba(0, 0, 0, 0.1);
+}
+
+.message__user__text__admin {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    display: inline-block;
+    margin-bottom: 0;
+    box-shadow: 5px 3px 4px 3px rgba(0, 0, 0, 0.1);
 }

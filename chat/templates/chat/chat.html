@@ -6,7 +6,7 @@
     <h2>Сообщения</h2>
     {% for message in messages %}
         <a href="{% url 'chat:chat_detail' message.id %}">
-        <div style="background: #efefef; width: 30%; max-height: 200px; min-height: 60px; border-radius: 40px; padding-left: 2%;">
+        <div style="background: #fff; width: 30%; max-height: 200px; min-height: 60px; border-radius: 24px; padding-left: 2%; box-shadow: 20px 20px 20px 20px rgba(0, 0, 0, 0.1);">
             <div style="display: flex;">
                 <h3 style="padding-right: 1%;">{{ message.user.last_name }}</h3>
                 <h3>{{ message.user.first_name }}</h3>

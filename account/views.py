@@ -43,7 +43,6 @@ def register(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password1'])
             new_user.save()
-            #Profile.objects.create(user=username)
             return redirect('shop:product_list')
     else:
         form = RegistrationForm()

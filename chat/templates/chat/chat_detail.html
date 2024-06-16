@@ -3,6 +3,7 @@
 {% block title %}Чат{% endblock %}
 
 {% block content %}
+    <div style="width: 1000px; margin-left: 20%;">
     <h1>
         Чат c {{ message.user.last_name }}
         {{ message.user.first_name }}
@@ -10,15 +11,24 @@
     </h1>
     {% for m in messages %}
         {% if m.user.username == 'ahmat' %}
-            <h2 style="background: orange; border-radius: 20px; width:40%; height:100px;">{{m.text}} {{m.time}}</h2>
+            <div class="message__user__container">
+                <h2 class="message__admin__admin">{{m.text}} {{m.time}}</h2>
+                <br>
+            </div>
         {% else %}
-            <h2 style="background: #efefef; border-radius: 20px; width: 40%; height:100px;">{{ m.text }} {{ m.time }}</h2>
+            <h3 class="message__user__text__admin">{{ m.text }} {{ m.time }}</h3>
+            <br>
         {% endif %}
     {% endfor %}
-    <form action="{% url 'chat:message' message.user.id %}" method="post">
+    <div style="display: flex; justify-content: center;">
+    <form action="{% url 'chat:message' message.user.id %}" method="post" style="margin-bottom: 100px;">
         {% csrf_token %}
         <p>Введите сообщение:</p>
-        <input class="text" type="text" placeholder="Текст..." name="message">
-        <input type="submit" value="Отправить сообщение">
+        <div class="chat-input">
+            <textarea class="text" type="text" placeholder="Текст..." name="message"></textarea>
+            <input type="submit" value="Отправить сообщение">
+        </div>
     </form>
+    </div>
+    </div>
 {% endblock %}
