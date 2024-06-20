@@ -16,7 +16,7 @@
 <nav class="menu">
   <h1 style="display: flex; justify-content: center;">Каталог</h1>
   <ul class="menu-items">
-    <li {% if not category %}class="selected"{% endif %}>
+    <li>
         <a href="{% url 'shop:product_list' %}">Все</a>
     </li>
     <li class="has-submenu">
@@ -358,7 +358,7 @@
                     {% endif %}
             </div>
         </div>
-    <button id="open-modal-btn" class="open-modal-btn"></button>
+    <button id="open-modal-btn" class="open-modal-btn"><img src="{% static 'img/chat.png' %}" class="img__modal"></button>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.getElementById("open-modal-btn").addEventListener("click", function() {

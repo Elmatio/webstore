@@ -8,8 +8,8 @@
 {% block content %}
     <body style="background: #f6f6f9; position: relative;">
         <h1 style="padding-left: 11%">Ваша корзина</h1>
-        <div class="sidebar" style="border-radius: 42px;">
-            <div style="width: 20%; height: 21%; background: #fff; display: block; position: absolute; padding-left: 1%; padding-top: 1%; padding-right: 1%; border-radius: 20px;">
+        <div class="sidebar">
+            <div class="cart__sidebar">
                 <a href='#' class="address">Выбрать адрес доставки</a>
                 <p style="margin-top: 10%;" class="total-count">Товары, {{ total_count }} шт.</p>
                 <div style="display:flex; justify-content: space-between;">
@@ -48,9 +48,9 @@
                                 <td class="count-products">
                                     <input type="hidden" class="product-id" value="{{ product.id }}">
                                     {% csrf_token %}
-                                    <button type="button" data-action="minus" class="change-count">-</button>
-                                    <input class="quantity-input" data-counter value="{{ item.quantity }}">
-                                    <button type="button" data-action="plus" class="change-count">+</button>
+                                    <button type="button" data-action="minus" class="change-count__cart">-</button>
+                                    <input class="quantity-input__cart" data-counter value="{{ item.quantity }}">
+                                    <button type="button" data-action="plus" class="change-count__cart">+</button>
                                 </td>
                                 <td>
                                     <form action="{% url 'cart:cart_remove' product.id %}" method="post">
